@@ -26,7 +26,7 @@ interface Room {
 }
 
 interface User {
-  id: string;
+  userId: string;
   username: string;
 }
 
@@ -70,7 +70,11 @@ export default function LobbyPage() {
           return;
         }
         const meData = await meRes.json();
-        setUser(meData.user);
+        const userData = meData.user;
+        setUser({
+          userId: userData.userId || userData.id,
+          username: userData.username
+        });
 
         const roomsRes = await fetch("/api/rooms");
         if (roomsRes.ok) {

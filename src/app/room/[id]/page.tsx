@@ -26,7 +26,7 @@ interface Message {
 }
 
 interface User {
-    id: string;
+    userId: string;
     username: string;
 }
 
@@ -85,7 +85,13 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
                     return;
                 }
                 const meData = await meRes.json();
-                setUser(meData.user);
+                const userData = meData.user;
+                // Ensure we handle both 'id' and 'userId' if the API is inconsistent,
+                // though our API should be returning userId from the payload.
+                setUser({
+                    userId: userData.userId || userData.id,
+                    username: userData.username
+                });
 
                 const roomRes = await fetch(`/api/rooms/${roomId}`);
                 if (!roomRes.ok) throw new Error("Room not found");
@@ -113,6 +119,7 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
             setSocket(newSocket);
 
             newSocket.on("connect", () => {
+                console.log("Joined room:", roomId);
                 newSocket.emit("join_room", roomId);
             });
 
@@ -236,13 +243,12 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
                         <h1 className="text-sm font-black text-zinc-900 dark:text-zinc-50 leading-tight uppercase tracking-wide">{roomInfo?.name}</h1>
                         <div className="flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400 font-bold text-[9px] uppercase tracking-widest mt-0.5">
                             <Users className="w-3 h-3 text-emerald-500" />
-                            {members.length} Online
+                            {members.length > 0 ? members.length : 1} Online
                         </div>
                     </div>
                 </div>
 
                 <div className="flex items-center gap-3">
-                    {/* Members list preview */}
                     <div className="hidden md:flex items-center -space-x-2 mr-2">
                         {members.slice(0, 3).map((m, i) => (
                             <div key={i} title={m.username} className="w-7 h-7 rounded-lg border-2 border-white dark:border-zinc-900 bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-[10px] font-black uppercase text-zinc-600 dark:text-zinc-400">
@@ -276,37 +282,39 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
                 </div>
             </header>
 
-            <main className="flex-1 overflow-y-auto p-6 space-y-4 bg-zinc-50/50 dark:bg-zinc-950/20 transition-colors duration-0">
-                <AnimatePresence initial={false}>
-                    {messages.map((msg) => {
-                        const isMe = msg.userId === user?.id;
-                        return (
-                            <motion.div key={msg.id} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} layout className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
-                                <div className={`flex flex-col max-w-[70%] ${isMe ? "items-end" : "items-start"}`}>
-                                    {!isMe && (
-                                        <div className="flex items-center gap-1.5 mb-1.5 ml-1">
-                                            <div className="w-4 h-4 rounded-md bg-blue-600/10 flex items-center justify-center text-[8px] font-black text-blue-600 uppercase">
-                                                {msg.user.username.charAt(0)}
+            <main className="flex-1 overflow-y-auto bg-zinc-50/30 dark:bg-zinc-950/20 transition-colors duration-0">
+                <div className="max-w-2xl mx-auto w-full min-h-full bg-white/50 dark:bg-zinc-900/30 border-x border-zinc-200 dark:border-zinc-800/50 p-6 space-y-6">
+                    <AnimatePresence initial={false}>
+                        {messages.map((msg) => {
+                            const isMe = msg.userId === user?.userId;
+                            return (
+                                <motion.div key={msg.id} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} layout className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
+                                    <div className={`flex flex-col max-w-[85%] ${isMe ? "items-end" : "items-start"}`}>
+                                        {!isMe && (
+                                            <div className="flex items-center gap-1.5 mb-1.5 ml-1">
+                                                <div className="w-4 h-4 rounded-md bg-blue-600 flex items-center justify-center text-[8px] font-black text-white uppercase">
+                                                    {msg.user.username.charAt(0)}
+                                                </div>
+                                                <span className="text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase tracking-widest leading-none">{msg.user.username}</span>
                                             </div>
-                                            <span className="text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase tracking-widest leading-none">{msg.user.username}</span>
+                                        )}
+                                        <div className={`px-4 py-2.5 rounded-2xl text-[13px] leading-relaxed shadow-sm ${isMe ? "bg-blue-600 text-white rounded-tr-none font-medium" : "bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-tl-none text-zinc-800 dark:text-zinc-200"}`}>
+                                            {msg.text}
                                         </div>
-                                    )}
-                                    <div className={`px-4 py-2.5 rounded-2xl text-[13px] leading-relaxed shadow-sm ${isMe ? "bg-blue-600 text-white rounded-tr-none font-medium" : "bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-tl-none text-zinc-800 dark:text-zinc-200"}`}>
-                                        {msg.text}
+                                        <span className="text-[9px] text-zinc-400 dark:text-zinc-500 mt-1.5 px-2 font-bold opacity-60">
+                                            {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        </span>
                                     </div>
-                                    <span className="text-[9px] text-zinc-400 dark:text-zinc-500 mt-1.5 px-2 font-bold opacity-60">
-                                        {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                    </span>
-                                </div>
-                            </motion.div>
-                        );
-                    })}
-                </AnimatePresence>
-                <div ref={messagesEndRef} />
+                                </motion.div>
+                            );
+                        })}
+                    </AnimatePresence>
+                    <div ref={messagesEndRef} className="h-4" />
+                </div>
             </main>
 
             <footer className="p-4 bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 transition-colors duration-0">
-                <form onSubmit={sendMessage} className="max-w-3xl mx-auto relative group">
+                <form onSubmit={sendMessage} className="max-w-2xl mx-auto relative group">
                     <input
                         type="text" value={inputText} onChange={(e) => setInputText(e.target.value)}
                         className="w-full pl-6 pr-14 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-zinc-900 dark:text-zinc-50 font-medium text-sm shadow-inner"
