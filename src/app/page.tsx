@@ -127,17 +127,17 @@ export default function ChatApp() {
           className="w-full max-w-md relative"
         >
           {/* Decorative blur blob */}
-          <div className="absolute -inset-1 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-2xl blur-xl opacity-20" />
+          <div className="absolute -inset-1 bg-linear-to-r from-violet-600 to-indigo-600 rounded-2xl blur-xl opacity-20" />
 
           <form
             onSubmit={handleJoin}
             className="relative bg-zinc-900/80 backdrop-blur-xl border border-zinc-800 p-8 rounded-2xl shadow-2xl flex flex-col gap-6"
           >
             <div className="flex flex-col items-center gap-3">
-              <div className="w-16 h-16 bg-gradient-to-br from-violet-500 to-indigo-500 rounded-full flex items-center justify-center shadow-lg">
+              <div className="w-16 h-16 bg-linear-to-br from-violet-500 to-indigo-500 rounded-full flex items-center justify-center shadow-lg">
                 <MessageSquare className="w-8 h-8 text-white" />
               </div>
-              <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-400">
+              <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-linear-to-r from-white to-zinc-400">
                 Welcome to VibeChat
               </h1>
               <p className="text-zinc-500 text-sm text-center">
@@ -165,7 +165,7 @@ export default function ChatApp() {
             <button
               type="submit"
               disabled={!username.trim() || loading}
-              className="w-full py-3 px-4 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 disabled:from-zinc-800 disabled:to-zinc-800 disabled:text-zinc-500 text-white font-medium rounded-xl transition-all shadow-lg hover:shadow-violet-500/25 active:scale-[0.98]"
+              className="w-full py-3 px-4 bg-linear-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 disabled:from-zinc-800 disabled:to-zinc-800 disabled:text-zinc-500 text-white font-medium rounded-xl transition-all shadow-lg hover:shadow-violet-500/25 active:scale-[0.98]"
             >
               {loading ? "Connecting..." : "Join Chat"}
             </button>
@@ -181,12 +181,12 @@ export default function ChatApp() {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4 }}
-        className="w-full max-w-4xl h-[100dvh] sm:h-[85vh] bg-zinc-900/50 sm:backdrop-blur-2xl sm:border border-zinc-800/50 sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden relative"
+        className="w-full max-w-4xl h-dvh sm:h-[85vh] bg-zinc-900/50 sm:backdrop-blur-2xl sm:border border-zinc-800/50 sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden relative"
       >
         {/* Header */}
         <header className="px-6 py-4 border-b border-zinc-800/50 bg-zinc-900/80 backdrop-blur-md flex items-center justify-between z-10 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 bg-linear-to-br from-violet-500 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg">
               <MessageSquare className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -240,11 +240,11 @@ export default function ChatApp() {
                   </span>
                   <div
                     className={`px-4 py-2.5 rounded-2xl ${isMe
-                      ? "bg-gradient-to-br from-violet-600 to-indigo-600 text-white rounded-tr-sm shadow-violet-500/20"
+                      ? "bg-linear-to-br from-violet-600 to-indigo-600 text-white rounded-tr-sm shadow-violet-500/20"
                       : "bg-zinc-800/80 text-zinc-100 border border-zinc-700/50 rounded-tl-sm shadow-black/20"
                       } shadow-lg`}
                   >
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
+                    <p className="text-sm leading-relaxed whitespace-pre-wrap wrap-break-word">
                       {msg.text}
                     </p>
                   </div>
