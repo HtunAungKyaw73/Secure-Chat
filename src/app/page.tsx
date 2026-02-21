@@ -118,7 +118,7 @@ export default function LobbyPage() {
 
   if (loading || !user) return (
     <div className="h-screen bg-background flex items-center justify-center">
-      <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+      <div className="w-8 h-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
     </div>
   );
 
@@ -127,7 +127,7 @@ export default function LobbyPage() {
       {/* Header */}
       <header className="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 px-8 py-4 flex items-center justify-between shadow-sm sticky top-0 z-20 transition-colors duration-0">
         <div className="flex items-center gap-3">
-          <div className="bg-blue-600 p-2 rounded-xl text-white shadow-lg shadow-blue-500/20">
+          <div className="bg-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-500/20">
             <MessageSquare className="w-5 h-5" />
           </div>
           <h1 className="text-xs font-black text-zinc-900 dark:text-zinc-50 uppercase tracking-widest">VibeChat Lobby</h1>
@@ -165,8 +165,8 @@ export default function LobbyPage() {
       <main className="max-w-7xl mx-auto px-8 py-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <div className="flex items-center gap-2 text-blue-600 font-black text-[10px] uppercase tracking-[0.2em] mb-2">
-              <span className="w-8 h-0.5 bg-blue-600 rounded-full" />
+            <div className="flex items-center gap-2 text-indigo-600 font-black text-[10px] uppercase tracking-[0.2em] mb-2">
+              <span className="w-8 h-0.5 bg-indigo-600 rounded-full" />
               Discover
             </div>
             <h2 className="text-4xl font-black text-zinc-900 dark:text-zinc-50 uppercase tracking-tighter leading-none">
@@ -176,16 +176,16 @@ export default function LobbyPage() {
 
           <div className="flex items-center gap-3">
             <div className="relative group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 group-focus-within:text-blue-500 transition-colors" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 group-focus-within:text-indigo-500 transition-colors" />
               <input
                 type="text"
                 placeholder="Find a vibe..."
-                className="pl-11 pr-4 py-3.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl w-full md:w-64 focus:ring-4 focus:ring-blue-500/5 outline-none font-bold text-xs transition-all shadow-sm"
+                className="pl-11 pr-4 py-3.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl w-full md:w-64 focus:ring-4 focus:ring-indigo-500/5 outline-none font-bold text-xs transition-all shadow-sm"
               />
             </div>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="flex items-center gap-2 px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-2xl shadow-xl shadow-blue-500/30 transition-all hover:scale-[1.02] active:scale-[0.98] uppercase tracking-widest text-[10px]"
+              className="flex items-center gap-2 px-6 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-2xl shadow-xl shadow-indigo-500/30 transition-all hover:scale-[1.02] active:scale-[0.98] uppercase tracking-widest text-[10px]"
             >
               <Plus className="w-4 h-4" />
               Create Room
@@ -202,10 +202,10 @@ export default function LobbyPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
                 onClick={() => router.push(`/room/${room.id}`)}
-                className="group relative bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 hover:shadow-2xl hover:shadow-blue-500/10 transition-all cursor-pointer overflow-hidden border-b-4 hover:border-b-blue-600 active:scale-[0.99]"
+                className="group relative bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all cursor-pointer overflow-hidden border-b-4 hover:border-b-indigo-600 active:scale-[0.99]"
               >
                 <div className="flex justify-between items-start mb-6">
-                  <div className="w-12 h-12 bg-zinc-50 dark:bg-zinc-800 rounded-2xl flex items-center justify-center text-zinc-400 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-inner">
+                  <div className="w-12 h-12 bg-zinc-50 dark:bg-zinc-800 rounded-2xl flex items-center justify-center text-zinc-400 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-inner">
                     <Hash className="w-6 h-6" />
                   </div>
                   {room.isProtected && (
@@ -216,7 +216,7 @@ export default function LobbyPage() {
                   )}
                 </div>
 
-                <h3 className="text-xl font-black text-zinc-900 dark:text-zinc-50 mb-2 truncate uppercase tracking-tight group-hover:text-blue-600 transition-colors">
+                <h3 className="text-xl font-black text-zinc-900 dark:text-zinc-50 mb-2 truncate uppercase tracking-tight group-hover:text-indigo-600 transition-colors">
                   {room.name}
                 </h3>
                 <p className="text-zinc-500 dark:text-zinc-400 text-xs font-medium line-clamp-2 min-h-10 leading-relaxed">
@@ -228,7 +228,7 @@ export default function LobbyPage() {
                     <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                     <span className="text-[10px] font-black text-zinc-400 uppercase tracking-tighter">Join the Vibe</span>
                   </div>
-                  <div className="w-8 h-8 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                  <div className="w-8 h-8 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 group-hover:bg-indigo-600 group-hover:text-white transition-all">
                     <ArrowRight className="w-4 h-4" />
                   </div>
                 </div>
@@ -256,8 +256,8 @@ export default function LobbyPage() {
               className="relative w-full max-w-lg bg-white dark:bg-zinc-900 rounded-[2.5rem] shadow-2xl overflow-hidden"
             >
               <div className="p-10">
-                <div className="flex items-center gap-3 text-blue-600 font-black text-[10px] uppercase tracking-[0.2em] mb-4">
-                  <span className="w-8 h-0.5 bg-blue-600 rounded-full" />
+                <div className="flex items-center gap-3 text-indigo-600 font-black text-[10px] uppercase tracking-[0.2em] mb-4">
+                  <span className="w-8 h-0.5 bg-indigo-600 rounded-full" />
                   New Space
                 </div>
                 <h2 className="text-3xl font-black text-zinc-900 dark:text-zinc-50 uppercase tracking-tighter mb-8 leading-none">
@@ -271,7 +271,7 @@ export default function LobbyPage() {
                       required
                       value={newName}
                       onChange={(e) => setNewName(e.target.value)}
-                      className="w-full px-6 py-4 bg-zinc-50 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-bold text-sm text-zinc-900 dark:text-zinc-50 shadow-inner"
+                      className="w-full px-6 py-4 bg-zinc-50 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-bold text-sm text-zinc-900 dark:text-zinc-50 shadow-inner"
                       placeholder="e.g. Midnight Vibin'"
                     />
                   </div>
@@ -281,7 +281,7 @@ export default function LobbyPage() {
                     <textarea
                       value={newDesc}
                       onChange={(e) => setNewDesc(e.target.value)}
-                      className="w-full px-6 py-4 bg-zinc-50 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-bold text-sm text-zinc-900 dark:text-zinc-50 min-h-[100px] resize-none shadow-inner"
+                      className="w-full px-6 py-4 bg-zinc-50 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-bold text-sm text-zinc-900 dark:text-zinc-50 min-h-[100px] resize-none shadow-inner"
                       placeholder="What's this room about?"
                     />
                   </div>
@@ -294,7 +294,7 @@ export default function LobbyPage() {
                         type="password"
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
-                        className="w-full pl-14 pr-6 py-4 bg-zinc-50 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-bold text-sm text-zinc-900 dark:text-zinc-50 shadow-inner"
+                        className="w-full pl-14 pr-6 py-4 bg-zinc-50 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-bold text-sm text-zinc-900 dark:text-zinc-50 shadow-inner"
                         placeholder="Add a password for protection"
                       />
                     </div>
@@ -310,7 +310,7 @@ export default function LobbyPage() {
                     </button>
                     <button
                       type="submit"
-                      className="flex-2 py-4 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-2xl shadow-xl shadow-blue-500/30 transition-all hover:scale-[1.02] active:scale-[0.98] uppercase tracking-widest text-[10px]"
+                      className="flex-2 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-2xl shadow-xl shadow-indigo-500/30 transition-all hover:scale-[1.02] active:scale-[0.98] uppercase tracking-widest text-[10px]"
                     >
                       Launch Room
                     </button>

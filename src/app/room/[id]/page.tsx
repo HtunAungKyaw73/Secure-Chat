@@ -181,7 +181,7 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
 
     if (loading) return (
         <div className="h-screen bg-background flex items-center justify-center">
-            <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
         </div>
     );
 
@@ -206,13 +206,13 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
                             autoFocus
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all font-bold text-zinc-900 dark:text-zinc-50 text-sm"
+                            className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-bold text-zinc-900 dark:text-zinc-50 text-sm"
                             placeholder="Enter Room Password"
                         />
                         {authError && <p className="text-red-500 text-xs font-bold bg-red-50 dark:bg-red-950/20 p-3 rounded-xl border border-red-100 dark:border-red-900/40">{authError}</p>}
                         <button
                             type="submit"
-                            className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 transition-all active:scale-[0.98] text-sm"
+                            className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/20 transition-all active:scale-[0.98] text-sm"
                         >
                             Unlock & Join
                         </button>
@@ -236,23 +236,26 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
                     <button onClick={() => router.push("/")} className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-all text-zinc-500 dark:text-zinc-400 active:scale-90 border border-transparent hover:border-zinc-200 dark:hover:border-zinc-700">
                         <ArrowLeft className="w-4 h-4" />
                     </button>
-                    <div className="bg-blue-600 p-2 rounded-xl text-white shadow-lg shadow-blue-500/20">
+                    <div className="bg-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-500/20">
                         <MessageSquare className="w-5 h-5" />
                     </div>
-                    <div>
-                        <h1 className="text-sm font-black text-zinc-900 dark:text-zinc-50 leading-tight uppercase tracking-wide">{roomInfo?.name}</h1>
-                        <div className="flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400 font-bold text-[9px] uppercase tracking-widest mt-0.5 max-w-[200px] md:max-w-md truncate">
-                            <span className="flex items-center gap-1 shrink-0">
-                                <Users className="w-3 h-3 text-emerald-500" />
-                                {members.length > 0 ? members.length : 1} Online
-                            </span>
-                            {members.length > 1 && (
-                                <>
-                                    <span className="text-zinc-300 dark:text-zinc-700 mx-1">•</span>
-                                    <span className="truncate">
-                                        Talking with: {members.filter(m => m.userId !== user?.userId).map(m => m.username).join(", ")}
-                                    </span>
-                                </>
+                    <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                            <h1 className="text-sm font-black text-zinc-900 dark:text-zinc-50 leading-tight uppercase tracking-wide truncate">{roomInfo?.name}</h1>
+                            <div className="flex items-center gap-1 px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/30 rounded-full border border-emerald-100 dark:border-emerald-900/40 shrink-0">
+                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-tighter">
+                                    {members.length > 0 ? members.length : 1} Live
+                                </span>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-1 text-zinc-500 dark:text-zinc-400 font-bold text-[10px] uppercase tracking-widest mt-1">
+                            {members.length > 1 ? (
+                                <span className="text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/30 px-2 py-0.5 rounded-md border border-indigo-100 dark:border-indigo-900/40 truncate">
+                                    Talking with: <span className="font-black">{members.filter(m => m.userId !== user?.userId).map(m => m.username).join(", ")}</span>
+                                </span>
+                            ) : (
+                                <span className="opacity-60 italic ml-1 lowercase tracking-normal font-medium">Waiting for others to join...</span>
                             )}
                         </div>
                     </div>
@@ -292,8 +295,8 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
                 </div>
             </header>
 
-            <main className="flex-1 overflow-y-auto bg-zinc-50/30 dark:bg-zinc-950/20 transition-colors duration-0">
-                <div className="max-w-2xl mx-auto w-full min-h-full bg-white/50 dark:bg-zinc-900/30 border-x border-zinc-200 dark:border-zinc-800/50 p-6 space-y-6">
+            <main className="flex-1 overflow-y-auto bg-zinc-50/10 dark:bg-zinc-950/5 transition-colors duration-0">
+                <div className="max-w-2xl mx-auto w-full min-h-full p-6 space-y-6">
                     <AnimatePresence initial={false}>
                         {messages.map((msg) => {
                             const isMe = msg.userId === user?.userId;
@@ -302,13 +305,13 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
                                     <div className={`flex flex-col max-w-[85%] ${isMe ? "items-end" : "items-start"}`}>
                                         {!isMe && (
                                             <div className="flex items-center gap-1.5 mb-1.5 ml-1">
-                                                <div className="w-4 h-4 rounded-md bg-blue-600 flex items-center justify-center text-[8px] font-black text-white uppercase">
+                                                <div className="w-4 h-4 rounded-md bg-indigo-600 flex items-center justify-center text-[8px] font-black text-white uppercase">
                                                     {msg.user.username.charAt(0)}
                                                 </div>
                                                 <span className="text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase tracking-widest leading-none">{msg.user.username}</span>
                                             </div>
                                         )}
-                                        <div className={`px-4 py-2.5 rounded-2xl text-[13px] leading-relaxed shadow-sm ${isMe ? "bg-blue-600 text-white rounded-tr-none font-medium" : "bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-tl-none text-zinc-800 dark:text-zinc-200"}`}>
+                                        <div className={`px-4 py-2.5 rounded-2xl text-[13px] leading-relaxed shadow-sm ${isMe ? "bg-indigo-600 text-white rounded-tr-none font-medium" : "bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-tl-none text-zinc-800 dark:text-zinc-200"}`}>
                                             {msg.text}
                                         </div>
                                         <span className="text-[9px] text-zinc-400 dark:text-zinc-500 mt-1.5 px-2 font-bold opacity-60">
