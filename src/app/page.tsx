@@ -215,7 +215,7 @@ export default function LobbyPage() {
                 <h3 className="text-xl font-black text-zinc-900 dark:text-zinc-50 mb-2 truncate uppercase tracking-tight group-hover:text-blue-600 transition-colors">
                   {room.name}
                 </h3>
-                <p className="text-zinc-500 dark:text-zinc-400 text-xs font-medium line-clamp-2 min-h-[2.5rem] leading-relaxed">
+                <p className="text-zinc-500 dark:text-zinc-400 text-xs font-medium line-clamp-2 min-h-10 leading-relaxed">
                   {room.description || "No description provided."}
                 </p>
 
