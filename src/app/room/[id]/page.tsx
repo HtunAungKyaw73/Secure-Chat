@@ -244,7 +244,7 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
                             <div className="flex items-center gap-1.5 px-2 py-0.5 bg-emerald-500/10 rounded-full border border-emerald-500/20 shrink-0">
                                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
                                 <span className="text-[9px] font-black text-emerald-500 uppercase tracking-tighter">
-                                    {members.length > 0 ? members.length : 1} Live
+                                    {members.length > 0 ? members.length : 1} Online
                                 </span>
                             </div>
                         </div>

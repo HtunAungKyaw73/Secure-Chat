@@ -47,7 +47,7 @@ export default function LoginPage() {
                         <span className="w-12 h-0.5 bg-violet-600 rounded-full" />
                         Access
                     </div>
-                    <h1 className="text-5xl font-black text-zinc-900 dark:text-zinc-50 uppercase tracking-tighter leading-none mb-4">VibeChat</h1>
+                    <h1 className="text-5xl font-black text-zinc-900 dark:text-zinc-50 uppercase tracking-tighter leading-none mb-4">Secure Chat</h1>
                     <p className="text-zinc-500 dark:text-zinc-400 text-[11px] font-bold uppercase tracking-widest opacity-60">Synchronize your vibe.</p>
                 </div>
 

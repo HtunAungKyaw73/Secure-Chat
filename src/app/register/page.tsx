@@ -49,7 +49,7 @@ export default function RegisterPage() {
                         Awaken
                     </div>
                     <h1 className="text-5xl font-black text-zinc-900 dark:text-zinc-50 uppercase tracking-tighter leading-none mb-4">Join Us</h1>
-                    <p className="text-zinc-500 dark:text-zinc-400 text-[11px] font-bold uppercase tracking-widest opacity-60">Create your frequency.</p>
+                    <p className="text-zinc-500 dark:text-zinc-400 text-[11px] font-bold uppercase tracking-widest opacity-60">Create your account.</p>
                 </div>
 
                 <form onSubmit={handleRegister} className="space-y-6">

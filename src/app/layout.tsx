@@ -3,8 +3,8 @@ import { ThemeProvider } from "next-themes";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "VibeChat",
-  description: "A real-time, premium chat application.",
+  title: "Secure Chat",
+  description: "A real-time, premium chat application with text encrpytion for secure and safe chat.",
 };
 
 export default function RootLayout({
