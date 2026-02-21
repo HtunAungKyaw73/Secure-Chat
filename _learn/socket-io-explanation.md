@@ -65,7 +65,13 @@ socket.emit("user_join", username);
 
 // 3. Listen for events FROM the server
 socket.on("receive_message", (msg) => {
-    // When the server says "receive_message", we take the data and update our React state
+    // When the server says "receive_message", we append the new message to our list.
+    // Why use `(prev) => [...prev, msg]`?
+    // Because the socket event listener is registered inside a `useEffect` on component mount. 
+    // If we just did `setMessages([...messages, msg])`, the `messages` variable inside the listener 
+    // would be "stale" (it would always be an empty array from the initial render). 
+    // Using the functional updater `(prev)` guarantees React will always append the new message 
+    // to the most recent, up-to-date state array.
     setMessages((prev) => [...prev, msg]);
 });
 
