@@ -133,6 +133,7 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
             });
 
             newSocket.on("room_members", (memberList: Member[]) => {
+                console.log("Member list updated:", memberList);
                 setMembers(memberList);
             });
 
@@ -250,12 +251,28 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
                             </div>
                         </div>
                         <div className="flex items-center gap-1 text-zinc-500 dark:text-zinc-400 font-bold text-[10px] uppercase tracking-widest mt-1">
-                            {members.length > 1 ? (
-                                <span className="text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/30 px-2 py-0.5 rounded-md border border-indigo-100 dark:border-indigo-900/40 truncate">
-                                    Talking with: <span className="font-black">{members.filter(m => m.userId !== user?.userId).map(m => m.username).join(", ")}</span>
+                            {members.filter(m => {
+                                const mId = m.userId || (m as any).id;
+                                const myId = user?.userId;
+                                return mId && myId && String(mId) !== String(myId);
+                            }).length > 0 ? (
+                                <span className="text-indigo-600 dark:text-indigo-400 bg-indigo-50/50 dark:bg-indigo-950/30 px-2 py-0.5 rounded-md border border-indigo-100/50 dark:border-indigo-900/40 truncate flex items-center gap-1">
+                                    Talking with: <span className="font-black text-indigo-700 dark:text-indigo-300">
+                                        {members
+                                            .filter(m => {
+                                                const mId = m.userId || (m as any).id;
+                                                const myId = user?.userId;
+                                                return mId && myId && String(mId) !== String(myId);
+                                            })
+                                            .map(m => m.username)
+                                            .join(", ")}
+                                    </span>
                                 </span>
                             ) : (
-                                <span className="opacity-60 italic ml-1 lowercase tracking-normal font-medium">Waiting for others to join...</span>
+                                <div className="flex items-center gap-1.5 opacity-60 ml-1">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
+                                    <span className="italic lowercase tracking-normal font-medium">Vibing solo... waiting for others</span>
+                                </div>
                             )}
                         </div>
                     </div>
@@ -295,8 +312,8 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
                 </div>
             </header>
 
-            <main className="flex-1 overflow-y-auto bg-zinc-50/10 dark:bg-zinc-950/5 transition-colors duration-0">
-                <div className="max-w-2xl mx-auto w-full min-h-full p-6 space-y-6">
+            <main className="flex-1 overflow-y-auto bg-zinc-50/50 dark:bg-background transition-colors duration-0">
+                <div className="max-w-2xl mx-auto w-full min-h-full p-6 space-y-6 bg-transparent">
                     <AnimatePresence initial={false}>
                         {messages.map((msg) => {
                             const isMe = msg.userId === user?.userId;

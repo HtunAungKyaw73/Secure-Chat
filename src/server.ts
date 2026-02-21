@@ -53,6 +53,8 @@ app.prepare().then(() => {
             if (!roomMembers.has(roomId)) roomMembers.set(roomId, new Map());
             roomMembers.get(roomId)!.set(socket.id, { username: user.username, userId: user.userId });
 
+            console.log(`User ${user.username} (${user.userId}) joined room ${roomId}. Total unique users: ${roomMembers.get(roomId)!.size}`);
+
             // Broadcast updated member list
             broadcastMembers(roomId);
         });
@@ -91,7 +93,7 @@ app.prepare().then(() => {
                 const memberList = Array.from(members.values());
                 // Get unique users by userId (one user might have multiple tabs)
                 const uniqueMembers = Array.from(
-                    new Map(memberList.map(m => [m.userId, m])).values()
+                    new Map(memberList.map(m => [(m.userId || (m as any).id), m])).values()
                 );
                 io.to(roomId).emit("room_members", uniqueMembers);
             }
