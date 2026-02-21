@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SecureChat: Secure Real-Time Messaging
 
-## Getting Started
+SecureChat is a premium, real-time messaging application built with a high-density **Glassmorphism** design system. It combines cutting-edge web technologies with a focus on security, performance, and state-of-the-art UI/UX.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## ✨ Core Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **💎 Glassmorphism UI**: A custom "Amethyst Deep Space" aesthetic featuring backdrop blurs, glow meshes, and high-density typography.
+- **⚡ Real-Time Communication**: Powered by Socket.IO for instantaneous message delivery and live member tracking.
+- **🔒 Message Encryption at Rest**: All chat messages are encrypted using **AES-256-GCM** before being stored in the database.
+- **🛡️ Secure Rooms**: JWT-protected authentication, secure API routes, and the ability to create password-protected private spaces.
+- **🌓 Cinematic Transitions**: Visual theme toggling (Light/Dark) using the experimental **View Transitions API** for ripple-effect transitions.
+- **🔄 Persistence**: Robust session management and message history retrieval, ensuring the conversation never drops.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Tech Stack
 
-## Learn More
+- **Frontend**: [Next.js 16](https://nextjs.org/) (App Router), [Tailwind CSS v4](https://tailwindcss.com/), [Framer Motion](https://www.framer.com/motion/).
+- **Backend**: Node.js custom server with [Socket.IO](https://socket.io/).
+- **Database**: [PostgreSQL](https://www.postgresql.org/) (via [NeonDB](https://neon.tech/)), [Prisma ORM](https://www.prisma.io/).
+- **Security**: [Bcrypt.js](https://github.com/dcodeIO/bcrypt.js/) for password hashing, [JSON Web Tokens](https://jwt.io/) for auth, and Node `crypto` for content encryption.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🚀 Getting Started
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Prerequisites
 
-## Deploy on Vercel
+- Node.js 20+
+- A PostgreSQL database (e.g., [Neon.tech](https://neon.tech/))
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Installation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Clone the repository:
+   ```bash
+   git clone <your-repo-url>
+   cd Vibe-Coding/chat-app
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Configure environment variables. Create a `.env` file in the root:
+   ```env
+   DATABASE_URL="your-postgresql-url"
+   JWT_SECRET="your-secure-jwt-secret"
+   MESSAGE_ENCRYPTION_KEY="your-32-byte-hex-encryption-key"
+   ```
+
+4. Push the database schema:
+   ```bash
+   npx prisma db push
+   ```
+
+### Running the App
+
+- **Development**:
+  ```bash
+  npm run dev
+  ```
+  Runs the custom Socket.IO + Next.js server with `tsx`.
+
+- **Production Build**:
+  ```bash
+  npm run build
+  npm start
+  ```
+
+---
+
+## 📁 Project Structure
+
+- `src/server.ts`: Custom Node.js server entry point for Socket.IO integration.
+- `src/lib/crypto.ts`: Core encryption/decryption logic (AES-256-GCM).
+- `src/lib/auth.ts`: Authentication helpers (JWT, Bcrypt).
+- `src/app/room/[id]`: Real-time chat room interface.
+- `src/app/globals.css`: Tailwind v4 theme configurations, glassmorphism tokens, and View Transition animations.
+
+---
+
+## 🚢 Deployment
+
+For detailed deployment instructions for platforms like **Railway** or **Render**, please refer to our [Deployment Guide](file:///Users/macbookair/.gemini/antigravity/brain/2e8c47f6-c223-419b-8925-ff2f49c49eb5/deployment_guide.md).
+
+---
+
+*Built with ❤️ by Antigravity.*
