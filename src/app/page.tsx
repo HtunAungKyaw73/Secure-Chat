@@ -137,7 +137,7 @@ export default function LobbyPage() {
           <div className="bg-violet-600 p-2 rounded-xl text-white shadow-lg shadow-violet-500/20">
             <MessageSquare className="w-5 h-5" />
           </div>
-          <h1 className="text-[10px] font-black text-zinc-900 dark:text-zinc-50 uppercase tracking-[0.3em]">VibeChat</h1>
+          <h1 className="text-[10px] font-black text-zinc-900 dark:text-zinc-50 uppercase tracking-[0.3em]">SecureChat</h1>
         </div>
 
         <div className="flex items-center gap-4">
