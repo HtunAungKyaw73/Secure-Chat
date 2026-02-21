@@ -10,8 +10,7 @@ import {
     ArrowLeft,
     Sun,
     Moon,
-    Lock,
-    Users
+    Lock
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
@@ -66,12 +65,12 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
         document.documentElement.style.setProperty("--x", x);
         document.documentElement.style.setProperty("--y", y);
 
-        if (!(document as any).startViewTransition) {
+        if (!(document as unknown as { startViewTransition?: unknown }).startViewTransition) {
             setTheme(isDark ? "light" : "dark");
             return;
         }
 
-        (document as any).startViewTransition(() => {
+        (document as unknown as { startViewTransition: (cb: () => void) => void }).startViewTransition(() => {
             setTheme(isDark ? "light" : "dark");
         });
     };
@@ -110,7 +109,7 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
         };
 
         init();
-    }, [roomId, router]);
+    }, [roomId, router, user]);
 
     // Handle socket connection only after authentication
     useEffect(() => {
@@ -119,7 +118,7 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
             setSocket(newSocket);
 
             newSocket.on("connect", () => {
-                const myId = user?.userId || (user as any)?.id;
+                const myId = user?.userId;
                 console.log(`[Socket] Connected to room ${roomId} as ${user?.username} (ID: ${myId})`);
                 newSocket.emit("join_room", roomId);
             });
@@ -142,7 +141,7 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
                 newSocket.disconnect();
             };
         }
-    }, [isAuthenticated, roomId]);
+    }, [roomId, isAuthenticated, user?.userId, user?.username]);
 
     const handleVerifyPassword = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -159,14 +158,14 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
             } else {
                 setAuthError(data.error || "Invalid password");
             }
-        } catch (err) {
+        } catch {
             setAuthError("Verification failed");
         }
     };
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [messages, isAuthenticated]);
+    }, [messages, isAuthenticated, user]);
 
     const sendMessage = (e: React.FormEvent) => {
         e.preventDefault();
@@ -253,16 +252,16 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
                         </div>
                         <div className="flex items-center gap-1 text-zinc-500 dark:text-zinc-400 font-bold text-[9px] uppercase tracking-[0.2em] mt-1">
                             {members.filter(m => {
-                                const mId = m.userId || (m as any).id;
-                                const myId = user?.userId || (user as any)?.id;
+                                const mId = m.userId;
+                                const myId = user?.userId;
                                 return mId && myId && String(mId) !== String(myId);
                             }).length > 0 ? (
                                 <span className="text-violet-400 bg-violet-500/10 px-2 py-0.5 rounded-md border border-violet-500/20 truncate flex items-center gap-1">
                                     Talking with: <span className="font-black text-violet-300">
                                         {members
                                             .filter(m => {
-                                                const mId = m.userId || (m as any).id;
-                                                const myId = user?.userId || (user as any)?.id;
+                                                const mId = m.userId;
+                                                const myId = user?.userId;
                                                 return mId && myId && String(mId) !== String(myId);
                                             })
                                             .map(m => m.username)

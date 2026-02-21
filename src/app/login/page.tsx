@@ -28,8 +28,8 @@ export default function LoginPage() {
             if (!res.ok) throw new Error(data.error || "Login failed");
 
             router.push("/");
-        } catch (err: any) {
-            setError(err.message);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Login failed");
         } finally {
             setLoading(false);
         }

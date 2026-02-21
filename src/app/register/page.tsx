@@ -29,8 +29,8 @@ export default function RegisterPage() {
             if (!res.ok) throw new Error(data.error || "Registration failed");
 
             router.push("/");
-        } catch (err: any) {
-            setError(err.message);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Registration failed");
         } finally {
             setLoading(false);
         }

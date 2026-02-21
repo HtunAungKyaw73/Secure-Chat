@@ -11,8 +11,7 @@ import {
   Sun,
   Moon,
   Hash,
-  ArrowRight,
-  User as UserIcon
+  ArrowRight
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
@@ -53,12 +52,12 @@ export default function LobbyPage() {
     document.documentElement.style.setProperty("--x", x);
     document.documentElement.style.setProperty("--y", y);
 
-    if (!(document as any).startViewTransition) {
+    if (!(document as unknown as { startViewTransition?: unknown }).startViewTransition) {
       setTheme(isDark ? "light" : "dark");
       return;
     }
 
-    (document as any).startViewTransition(() => {
+    (document as unknown as { startViewTransition: (cb: () => void) => void }).startViewTransition(() => {
       setTheme(isDark ? "light" : "dark");
     });
   };

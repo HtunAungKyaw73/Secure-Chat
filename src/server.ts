@@ -1,9 +1,13 @@
 import "dotenv/config";
 import { createServer } from "node:http";
 import next from "next";
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
 import { prisma } from "./lib/prisma";
-import { verifyToken } from "./lib/auth";
+import { verifyToken, JwtPayload } from "./lib/auth";
+
+interface AuthenticatedSocket extends Socket {
+    user: JwtPayload;
+}
 import { parse } from "cookie";
 
 const dev = process.env.NODE_ENV !== "production";
@@ -31,12 +35,16 @@ app.prepare().then(() => {
         const payload = verifyToken(token);
         if (!payload) return next(new Error("Authentication error"));
 
-        (socket as any).user = payload;
+        (socket as AuthenticatedSocket).user = payload;
         next();
     });
 
-    io.on("connection", (socket) => {
-        const user = (socket as any).user;
+    io.on("connection", (socket: Socket) => {
+        const user = (socket as AuthenticatedSocket).user;
+        if (!user) return;
+
+        const authSocket = socket as AuthenticatedSocket;
+        authSocket.user = user;
 
         socket.on("join_room", (roomId: string) => {
             // Leave previous rooms
@@ -93,7 +101,7 @@ app.prepare().then(() => {
                 const memberList = Array.from(members.values());
                 // Get unique users by userId (one user might have multiple tabs)
                 const uniqueMembers = Array.from(
-                    new Map(memberList.map(m => [(m.userId || (m as any).id), m])).values()
+                    new Map(memberList.map(m => [m.userId, m])).values()
                 );
                 io.to(roomId).emit("room_members", uniqueMembers);
             }
