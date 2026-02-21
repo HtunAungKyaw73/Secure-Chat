@@ -241,9 +241,19 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
                     </div>
                     <div>
                         <h1 className="text-sm font-black text-zinc-900 dark:text-zinc-50 leading-tight uppercase tracking-wide">{roomInfo?.name}</h1>
-                        <div className="flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400 font-bold text-[9px] uppercase tracking-widest mt-0.5">
-                            <Users className="w-3 h-3 text-emerald-500" />
-                            {members.length > 0 ? members.length : 1} Online
+                        <div className="flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400 font-bold text-[9px] uppercase tracking-widest mt-0.5 max-w-[200px] md:max-w-md truncate">
+                            <span className="flex items-center gap-1 shrink-0">
+                                <Users className="w-3 h-3 text-emerald-500" />
+                                {members.length > 0 ? members.length : 1} Online
+                            </span>
+                            {members.length > 1 && (
+                                <>
+                                    <span className="text-zinc-300 dark:text-zinc-700 mx-1">•</span>
+                                    <span className="truncate">
+                                        Talking with: {members.filter(m => m.userId !== user?.userId).map(m => m.username).join(", ")}
+                                    </span>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
