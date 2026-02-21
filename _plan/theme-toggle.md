@@ -63,23 +63,26 @@ const handleThemeToggle = () => {
 /* In globals.css */
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 0.4s;
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 1;
 }
 ::view-transition-new(root) {
-  animation-name: reveal-light;
+  z-index: 9999;
 }
-.dark::view-transition-new(root) {
-  animation-name: reveal-dark;
+[data-theme="dark"]::view-transition-new(root),
+[data-theme="light"]::view-transition-new(root) {
+  animation: circle-in 0.6s ease-in-out;
 }
-@keyframes reveal-light {
-  from { clip-path: circle(0% at top right); }
-  to   { clip-path: circle(150% at top right); }
-}
-@keyframes reveal-dark {
-  from { clip-path: circle(0% at top right); }
-  to   { clip-path: circle(150% at top right); }
+@keyframes circle-in {
+  from { clip-path: circle(0% at var(--x, 50%) var(--y, 50%)); }
+  to   { clip-path: circle(150% at var(--x, 50%) var(--y, 50%)); }
 }
 ```
+
+The `--x` and `--y` CSS variables are set from the toggle button's click coordinates so the ripple emanates precisely from the button click.
 
 > **Graceful Degradation:** If the browser doesn't support `startViewTransition`, we fall back to an instant switch. The feature is progressive enhancement.
 

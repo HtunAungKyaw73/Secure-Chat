@@ -1,8 +1,16 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Light theme (default) */
+:root,
+[data-theme="light"] {
+  --background: #f4f4f5;
+  --foreground: #18181b;
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --background: #09090b;
+  --foreground: #fafafa;
 }
 
 @theme inline {
@@ -12,15 +20,37 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ─── View Transitions API ─── */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+}
+
+[data-theme="dark"]::view-transition-new(root),
+[data-theme="light"]::view-transition-new(root) {
+  animation: circle-in 0.6s ease-in-out;
+}
+
+@keyframes circle-in {
+  from {
+    clip-path: circle(0% at var(--x, 50%) var(--y, 50%));
+  }
+
+  to {
+    clip-path: circle(150% at var(--x, 50%) var(--y, 50%));
+  }
 }
