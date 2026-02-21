@@ -18,6 +18,9 @@
 - **Issue:** Starting the custom Next.js server (`server.js`) threw `ERR_MODULE_NOT_FOUND` when importing `.ts` files (like `src/lib/prisma.ts`) because Next.js configures "type": "module" and ES module resolution strictness requires `.js` extensions or fails on `.ts` imports.
 - **Fix:** Renamed the server entry to `src/server.ts` and installed `tsx`. Updated `package.json` scripts to run `tsx src/server.ts` instead of `node src/server.js`, bypassing the ES module resolution friction entirely.
 
+- **Issue:** `next({ dev, hostname, port })` threw a Typescript error stating `Type 'string | number' is not assignable to type 'number | undefined'` because `process.env.PORT` resolves to a string.
+- **Fix:** Used `parseInt(process.env.PORT || "3000", 10)` to enforce that `port` evaluates strictly to a `number`.
+
 ## 3. Future Technical Debt
 - **Authentication:** Currently using a basic `useState` username. A robust authentication system (e.g., NextAuth) should be added.
 - **Database:** Need to migrate from SQLite to PostgreSQL as initially planned when the production/local environment supports it.
@@ -26,3 +29,4 @@
 - **[Agent Note]:** Prisma 7 entirely enforces Driver Adapters. For SQLite, install `@prisma/adapter-libsql` & `@libsql/client`. The adapter is instantiated with `new PrismaLibSql({ url: process.env.DATABASE_URL })` rather than an initialized client. The `.prisma` file must omit the `url = env(...)` in the `datasource` block or it throws error `P1012`.
 - **[Agent Note]:** Tailwind v4 introduced breaking class name changes: `bg-gradient-to-*` is now `bg-linear-to-*`. `break-words` is now `wrap-break-word`.
 - **[Agent Note]:** When building custom Next.js servers in an ES Module environment (`"type": "module"`), `node server.js` will fail to resolve TypeScript imports unless explicitly handled. Best modern practice is to use `src/server.ts` and execute it with `tsx` (`npm i -D tsx` -> `tsx src/server.ts`).
+- **[Agent Note]:** When initializing a custom Next.js app (`const app = next({ port })`), the `port` property must be strictly a `number` or `undefined`. Do not pass `process.env.PORT || 3000` implicitly without `parseInt()`.
