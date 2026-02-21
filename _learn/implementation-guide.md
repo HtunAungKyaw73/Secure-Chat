@@ -10,6 +10,7 @@ VibeChat was built in five distinct phases:
 - **Phase 3**: Migration to **PostgreSQL (NeonDB)** and implementation of **Secure Rooms** with JWT-based authentication.
 - **Phase 4**: Solving environment variables and Prisma 7 transition issues.
 - **Phase 5**: Premium UI/UX overhaul, including **Inter typography**, **messenger-style alignment**, and **real-time member tracking** using a custom **Indigo** palette.
+- **Phase 6**: Final polish, including **real-time Lobby search filtering** and comprehensive documentation.
 
 ---
 

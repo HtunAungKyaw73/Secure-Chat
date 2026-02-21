@@ -38,6 +38,8 @@ export default function LobbyPage() {
   const [loading, setLoading] = useState(true);
   const { theme, setTheme } = useTheme();
 
+  const [searchQuery, setSearchQuery] = useState("");
+
   // New room state
   const [newName, setNewName] = useState("");
   const [newDesc, setNewDesc] = useState("");
@@ -180,6 +182,8 @@ export default function LobbyPage() {
               <input
                 type="text"
                 placeholder="Find a vibe..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-11 pr-4 py-3.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl w-full md:w-64 focus:ring-4 focus:ring-indigo-500/5 outline-none font-bold text-xs transition-all shadow-sm"
               />
             </div>
@@ -195,45 +199,50 @@ export default function LobbyPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <AnimatePresence>
-            {rooms.map((room, index) => (
-              <motion.div
-                key={room.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-                onClick={() => router.push(`/room/${room.id}`)}
-                className="group relative bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all cursor-pointer overflow-hidden border-b-4 hover:border-b-indigo-600 active:scale-[0.99]"
-              >
-                <div className="flex justify-between items-start mb-6">
-                  <div className="w-12 h-12 bg-zinc-50 dark:bg-zinc-800 rounded-2xl flex items-center justify-center text-zinc-400 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-inner">
-                    <Hash className="w-6 h-6" />
-                  </div>
-                  {room.isProtected && (
-                    <div className="px-3 py-1.5 bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 rounded-xl flex items-center gap-1.5 shadow-sm border border-amber-100 dark:border-amber-900/40">
-                      <Lock className="w-3 h-3" />
-                      <span className="text-[9px] font-black uppercase tracking-tighter">Private</span>
+            {rooms
+              .filter(room =>
+                room.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                (room.description?.toLowerCase().includes(searchQuery.toLowerCase()))
+              )
+              .map((room, index) => (
+                <motion.div
+                  key={room.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  onClick={() => router.push(`/room/${room.id}`)}
+                  className="group relative bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all cursor-pointer overflow-hidden border-b-4 hover:border-b-indigo-600 active:scale-[0.99]"
+                >
+                  <div className="flex justify-between items-start mb-6">
+                    <div className="w-12 h-12 bg-zinc-50 dark:bg-zinc-800 rounded-2xl flex items-center justify-center text-zinc-400 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-inner">
+                      <Hash className="w-6 h-6" />
                     </div>
-                  )}
-                </div>
-
-                <h3 className="text-xl font-black text-zinc-900 dark:text-zinc-50 mb-2 truncate uppercase tracking-tight group-hover:text-indigo-600 transition-colors">
-                  {room.name}
-                </h3>
-                <p className="text-zinc-500 dark:text-zinc-400 text-xs font-medium line-clamp-2 min-h-10 leading-relaxed">
-                  {room.description || "No description provided."}
-                </p>
-
-                <div className="mt-8 pt-6 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[10px] font-black text-zinc-400 uppercase tracking-tighter">Join the Vibe</span>
+                    {room.isProtected && (
+                      <div className="px-3 py-1.5 bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 rounded-xl flex items-center gap-1.5 shadow-sm border border-amber-100 dark:border-amber-900/40">
+                        <Lock className="w-3 h-3" />
+                        <span className="text-[9px] font-black uppercase tracking-tighter">Private</span>
+                      </div>
+                    )}
                   </div>
-                  <div className="w-8 h-8 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 group-hover:bg-indigo-600 group-hover:text-white transition-all">
-                    <ArrowRight className="w-4 h-4" />
+
+                  <h3 className="text-xl font-black text-zinc-900 dark:text-zinc-50 mb-2 truncate uppercase tracking-tight group-hover:text-indigo-600 transition-colors">
+                    {room.name}
+                  </h3>
+                  <p className="text-zinc-500 dark:text-zinc-400 text-xs font-medium line-clamp-2 min-h-10 leading-relaxed">
+                    {room.description || "No description provided."}
+                  </p>
+
+                  <div className="mt-8 pt-6 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="text-[10px] font-black text-zinc-400 uppercase tracking-tighter">Join the Vibe</span>
+                    </div>
+                    <div className="w-8 h-8 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 group-hover:bg-indigo-600 group-hover:text-white transition-all">
+                      <ArrowRight className="w-4 h-4" />
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ))}
           </AnimatePresence>
         </div>
       </main>

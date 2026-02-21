@@ -119,7 +119,8 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
             setSocket(newSocket);
 
             newSocket.on("connect", () => {
-                console.log("Joined room:", roomId);
+                const myId = user?.userId || (user as any)?.id;
+                console.log(`[Socket] Connected to room ${roomId} as ${user?.username} (ID: ${myId})`);
                 newSocket.emit("join_room", roomId);
             });
 
@@ -253,7 +254,7 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
                         <div className="flex items-center gap-1 text-zinc-500 dark:text-zinc-400 font-bold text-[10px] uppercase tracking-widest mt-1">
                             {members.filter(m => {
                                 const mId = m.userId || (m as any).id;
-                                const myId = user?.userId;
+                                const myId = user?.userId || (user as any)?.id;
                                 return mId && myId && String(mId) !== String(myId);
                             }).length > 0 ? (
                                 <span className="text-indigo-600 dark:text-indigo-400 bg-indigo-50/50 dark:bg-indigo-950/30 px-2 py-0.5 rounded-md border border-indigo-100/50 dark:border-indigo-900/40 truncate flex items-center gap-1">
@@ -261,7 +262,7 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
                                         {members
                                             .filter(m => {
                                                 const mId = m.userId || (m as any).id;
-                                                const myId = user?.userId;
+                                                const myId = user?.userId || (user as any)?.id;
                                                 return mId && myId && String(mId) !== String(myId);
                                             })
                                             .map(m => m.username)
