@@ -39,6 +39,50 @@ npm i next-themes
 ### Step 5: Tailwind v4 dark mode config
 - Tailwind v4 uses `@variant dark` in CSS or `theme.extend.darkMode` in config. Confirm the dark mode strategy is set to `class` (not `media`) in `globals.css` or the Tailwind config.
 
+### Step 6: View Transition animation on toggle
+Use the browser-native **View Transitions API** to create a cinematic, circular "ripple" effect that emanates from the toggle button when switching themes. No extra library needed.
+
+**Technique:**
+1. Wrap the `setTheme()` call inside `document.startViewTransition(() => {...})`.
+2. In `globals.css`, define a CSS clip-path animation that expands from the button's position using `::view-transition-new(root)` and `::view-transition-old(root)` pseudo-elements.
+
+```tsx
+// In the toggle handler
+const handleThemeToggle = () => {
+  if (!document.startViewTransition) {
+    setTheme(isDark ? "light" : "dark");
+    return;
+  }
+  document.startViewTransition(() => {
+    setTheme(isDark ? "light" : "dark");
+  });
+};
+```
+
+```css
+/* In globals.css */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.4s;
+}
+::view-transition-new(root) {
+  animation-name: reveal-light;
+}
+.dark::view-transition-new(root) {
+  animation-name: reveal-dark;
+}
+@keyframes reveal-light {
+  from { clip-path: circle(0% at top right); }
+  to   { clip-path: circle(150% at top right); }
+}
+@keyframes reveal-dark {
+  from { clip-path: circle(0% at top right); }
+  to   { clip-path: circle(150% at top right); }
+}
+```
+
+> **Graceful Degradation:** If the browser doesn't support `startViewTransition`, we fall back to an instant switch. The feature is progressive enhancement.
+
 ## 3. Verification Plan
 
 ### Manual Test
