@@ -26,7 +26,7 @@ export async function GET(
         });
 
         // Decrypt messages for the client
-        const decryptedMessages = messages.map(msg => ({
+        const decryptedMessages = messages.map((msg: any) => ({
             ...msg,
             text: decrypt(msg.text)
         }));
