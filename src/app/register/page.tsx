@@ -55,7 +55,7 @@ export default function RegisterPage() {
                 <form onSubmit={handleRegister} className="space-y-6">
                     <div className="space-y-2">
                         <label className="text-[10px] font-black text-zinc-800 dark:text-zinc-500 uppercase tracking-widest ml-1">
-                            Identity
+                            Username
                         </label>
                         <input
                             type="text"
@@ -83,7 +83,7 @@ export default function RegisterPage() {
 
                     <div className="space-y-2">
                         <label className="text-[10px] font-black text-zinc-800 dark:text-zinc-500 uppercase tracking-widest ml-1">
-                            Cipher
+                            Password
                         </label>
                         <input
                             type="password"
@@ -106,14 +106,14 @@ export default function RegisterPage() {
                         disabled={loading}
                         className="w-full py-5 bg-violet-600 hover:bg-violet-700 text-white font-black rounded-2xl shadow-2xl shadow-violet-500/30 transition-all hover:scale-[1.05] active:scale-[0.95] disabled:opacity-50 uppercase tracking-[0.2em] text-[10px] mt-4"
                     >
-                        {loading ? "Materializing..." : "Register"}
+                        {loading ? "Registering..." : "Register"}
                     </button>
                 </form>
 
                 <p className="text-center mt-12 text-zinc-500 dark:text-zinc-400 text-[10px] font-black uppercase tracking-widest">
-                    Existing frequency?{" "}
+                    Already have an account?{" "}
                     <Link href="/login" className="text-violet-500 hover:text-violet-400 transition-colors">
-                        Synchronize here
+                        Login here
                     </Link>
                 </p>
             </motion.div>

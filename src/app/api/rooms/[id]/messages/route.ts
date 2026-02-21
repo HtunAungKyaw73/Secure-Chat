@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getTokenFromRequest } from "@/lib/auth";
+import { decrypt } from "@/lib/crypto";
 
 export async function GET(
     request: Request,
@@ -23,7 +24,14 @@ export async function GET(
                 },
             },
         });
-        return NextResponse.json(messages);
+
+        // Decrypt messages for the client
+        const decryptedMessages = messages.map(msg => ({
+            ...msg,
+            text: decrypt(msg.text)
+        }));
+
+        return NextResponse.json(decryptedMessages);
     } catch (error) {
         console.error("Fetch messages error:", error);
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });

@@ -43,6 +43,7 @@ export default function LobbyPage() {
   const [newName, setNewName] = useState("");
   const [newDesc, setNewDesc] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleThemeToggle = (e: React.MouseEvent<HTMLButtonElement>) => {
     const isDark = theme === "dark";
@@ -73,7 +74,7 @@ export default function LobbyPage() {
         const meData = await meRes.json();
         const userData = meData.user;
         setUser({
-          userId: userData.userId || userData.id,
+          userId: userData.userId,
           username: userData.username
         });
 
@@ -107,8 +108,13 @@ export default function LobbyPage() {
         setNewDesc("");
         setNewPassword("");
       }
+      else {
+        const data = await res.json();
+        setError(data.error);
+      }
     } catch (err) {
       console.error("Create room error:", err);
+      setError(err instanceof Error ? err.message : "Create room failed");
     }
   };
 
@@ -298,7 +304,7 @@ export default function LobbyPage() {
                   <div className="space-y-3">
                     <label className="text-[10px] font-black text-zinc-800 dark:text-zinc-500 uppercase tracking-widest ml-1">Lock (Optional)</label>
                     <div className="relative">
-                      <Lock className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500" />
+                      <Lock className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-900 dark:text-zinc-500" />
                       <input
                         type="password"
                         value={newPassword}
@@ -308,6 +314,12 @@ export default function LobbyPage() {
                       />
                     </div>
                   </div>
+
+                  {error && (
+                    <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="text-red-400 text-[10px] font-black uppercase tracking-widest bg-red-500/10 p-4 rounded-xl border border-red-500/20">
+                      Error: {error}
+                    </motion.div>
+                  )}
 
                   <div className="flex gap-4 pt-6">
                     <button

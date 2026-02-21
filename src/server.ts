@@ -4,11 +4,12 @@ import next from "next";
 import { Server, Socket } from "socket.io";
 import { prisma } from "./lib/prisma";
 import { verifyToken, JwtPayload } from "./lib/auth";
+import { parse } from "cookie";
+import { encrypt } from "./lib/crypto";
 
 interface AuthenticatedSocket extends Socket {
     user: JwtPayload;
 }
-import { parse } from "cookie";
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
@@ -70,11 +71,18 @@ app.prepare().then(() => {
         socket.on("send_message", async (data: { text: string; roomId: string }) => {
             try {
                 const { text, roomId } = data;
+
+                // Encrypt for database storage
+                const encryptedText = encrypt(text);
+
                 const savedMessage = await prisma.message.create({
-                    data: { text, userId: user.userId, roomId },
+                    data: { text: encryptedText, userId: user.userId, roomId },
                     include: { user: { select: { username: true } } }
                 });
-                io.to(roomId).emit("receive_message", savedMessage);
+
+                // Emit back the DECRYPTED text for immediate UI display
+                const displayMessage = { ...savedMessage, text };
+                io.to(roomId).emit("receive_message", displayMessage);
             } catch (error) {
                 console.error("Error saving message:", error);
             }
@@ -99,7 +107,6 @@ app.prepare().then(() => {
             const members = roomMembers.get(roomId);
             if (members) {
                 const memberList = Array.from(members.values());
-                // Get unique users by userId (one user might have multiple tabs)
                 const uniqueMembers = Array.from(
                     new Map(memberList.map(m => [m.userId, m])).values()
                 );

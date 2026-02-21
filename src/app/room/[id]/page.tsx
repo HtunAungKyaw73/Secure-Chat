@@ -85,10 +85,8 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
                 }
                 const meData = await meRes.json();
                 const userData = meData.user;
-                // Ensure we handle both 'id' and 'userId' if the API is inconsistent,
-                // though our API should be returning userId from the payload.
                 setUser({
-                    userId: userData.userId || userData.id,
+                    userId: userData.userId,
                     username: userData.username
                 });
 

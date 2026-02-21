@@ -54,7 +54,7 @@ export default function LoginPage() {
                 <form onSubmit={handleLogin} className="space-y-8">
                     <div className="space-y-3">
                         <label className="text-[10px] font-black text-zinc-800 dark:text-zinc-500 uppercase tracking-widest ml-1">
-                            Email Frequency
+                            Email
                         </label>
                         <input
                             type="email"
@@ -68,14 +68,14 @@ export default function LoginPage() {
 
                     <div className="space-y-3">
                         <label className="text-[10px] font-black text-zinc-800 dark:text-zinc-500 uppercase tracking-widest ml-1">
-                            Cipher
+                            Password
                         </label>
                         <input
                             type="password"
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-6 py-5 bg-white/5 dark:bg-zinc-800/40 border border-white/10 rounded-2xl focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500/50 outline-none transition-all font-bold text-[12px] text-zinc-900 dark:text-zinc-50 shadow-inner backdrop-blur-md"
+                            className="w-full px-6 py-5 bg-black/3 dark:bg-zinc-800/40 border border-white/10 rounded-2xl focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500/50 outline-none transition-all font-bold text-[12px] text-zinc-900 dark:text-zinc-50 shadow-inner backdrop-blur-md"
                             placeholder="••••••••"
                         />
                     </div>
@@ -91,14 +91,14 @@ export default function LoginPage() {
                         disabled={loading}
                         className="w-full py-5 bg-violet-600 hover:bg-violet-700 text-white font-black rounded-2xl shadow-2xl shadow-violet-500/30 transition-all hover:scale-[1.05] active:scale-[0.95] disabled:opacity-50 uppercase tracking-[0.2em] text-[10px]"
                     >
-                        {loading ? "Decrypting..." : "Initialize"}
+                        {loading ? "Logging in..." : "Login"}
                     </button>
                 </form>
 
                 <p className="text-center mt-12 text-zinc-500 dark:text-zinc-400 text-[10px] font-black uppercase tracking-widest">
                     New user?{" "}
                     <Link href="/register" className="text-violet-500 hover:text-violet-400 transition-colors">
-                        Materialize here
+                        Register here
                     </Link>
                 </p>
             </motion.div>
