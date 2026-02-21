@@ -3,15 +3,16 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  MessageSquare,
   Plus,
-  User as UserIcon,
+  MessageSquare,
+  Search,
+  Lock,
   LogOut,
   Sun,
   Moon,
-  DoorOpen,
-  Settings,
-  Lock
+  Hash,
+  ArrowRight,
+  User as UserIcon
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
@@ -20,9 +21,8 @@ interface Room {
   id: string;
   name: string;
   description: string | null;
-  passwordHash: string | null;
+  isProtected: boolean;
   createdAt: string;
-  _count: { messages: number };
 }
 
 interface User {
@@ -31,16 +31,17 @@ interface User {
 }
 
 export default function LobbyPage() {
+  const router = useRouter();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [user, setUser] = useState<User | null>(null);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [newRoomName, setNewRoomName] = useState("");
-  const [newRoomDesc, setNewRoomDesc] = useState("");
-  const [newRoomPass, setNewRoomPass] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const router = useRouter();
   const { theme, setTheme } = useTheme();
+
+  // New room state
+  const [newName, setNewName] = useState("");
+  const [newDesc, setNewDesc] = useState("");
+  const [newPassword, setNewPassword] = useState("");
 
   const handleThemeToggle = (e: React.MouseEvent<HTMLButtonElement>) => {
     const isDark = theme === "dark";
@@ -61,7 +62,7 @@ export default function LobbyPage() {
   };
 
   useEffect(() => {
-    const init = async () => {
+    const fetchData = async () => {
       try {
         const meRes = await fetch("/api/auth/me");
         if (!meRes.ok) {
@@ -77,34 +78,32 @@ export default function LobbyPage() {
           setRooms(roomsData);
         }
       } catch (err) {
-        console.error("Lobby init error:", err);
+        console.error("Lobby fetch error:", err);
       } finally {
         setLoading(false);
       }
     };
-    init();
+    fetchData();
   }, [router]);
 
   const handleCreateRoom = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
     try {
       const res = await fetch("/api/rooms", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: newRoomName,
-          description: newRoomDesc,
-          password: newRoomPass
-        }),
+        body: JSON.stringify({ name: newName, description: newDesc, password: newPassword }),
       });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to create room");
-
-      router.push(`/room/${data.id}`);
-    } catch (err: any) {
-      setError(err.message);
+      if (res.ok) {
+        const newRoom = await res.json();
+        setRooms([newRoom, ...rooms]);
+        setIsModalOpen(false);
+        setNewName("");
+        setNewDesc("");
+        setNewPassword("");
+      }
+    } catch (err) {
+      console.error("Create room error:", err);
     }
   };
 
@@ -113,103 +112,121 @@ export default function LobbyPage() {
     router.push("/login");
   };
 
-  if (loading || !user) return null;
+  if (loading || !user) return (
+    <div className="h-screen bg-background flex items-center justify-center">
+      <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-background transition-colors duration-0">
       {/* Header */}
-      <header className="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 px-8 py-5 flex items-center justify-between shadow-sm sticky top-0 z-20 transition-colors duration-0">
+      <header className="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 px-8 py-4 flex items-center justify-between shadow-sm sticky top-0 z-20 transition-colors duration-0">
         <div className="flex items-center gap-3">
-          <div className="bg-blue-600 p-2.5 rounded-2xl text-white shadow-xl shadow-blue-500/20">
-            <MessageSquare className="w-7 h-7" />
+          <div className="bg-blue-600 p-2 rounded-xl text-white shadow-lg shadow-blue-500/20">
+            <MessageSquare className="w-5 h-5" />
           </div>
-          <div>
-            <h1 className="text-2xl font-black text-zinc-900 dark:text-zinc-50 tracking-tight leading-none">VibeChat</h1>
-            <p className="text-zinc-400 font-medium text-xs mt-1 uppercase tracking-widest">Connect & Vibe</p>
-          </div>
+          <h1 className="text-xs font-black text-zinc-900 dark:text-zinc-50 uppercase tracking-widest">VibeChat Lobby</h1>
         </div>
 
         <div className="flex items-center gap-4">
-          <button
-            onClick={handleThemeToggle}
-            className="p-3 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-2xl transition-all text-zinc-600 dark:text-zinc-400 active:scale-95 border border-zinc-100 dark:border-zinc-800"
-          >
+          <button onClick={handleThemeToggle} className="p-2.5 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-all text-zinc-500 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800 shadow-sm">
             <AnimatePresence mode="wait" initial={false}>
               {theme === "dark" ? (
                 <motion.div key="sun" initial={{ scale: 0.5, rotate: -45 }} animate={{ scale: 1, rotate: 0 }} exit={{ scale: 0.5, rotate: 45 }}>
-                  <Sun className="w-5 h-5" />
+                  <Sun className="w-4 h-4" />
                 </motion.div>
               ) : (
                 <motion.div key="moon" initial={{ scale: 0.5, rotate: 45 }} animate={{ scale: 1, rotate: 0 }} exit={{ scale: 0.5, rotate: -45 }}>
-                  <Moon className="w-5 h-5" />
+                  <Moon className="w-4 h-4" />
                 </motion.div>
               )}
             </AnimatePresence>
           </button>
 
-          <div className="flex items-center gap-3 bg-zinc-50 dark:bg-zinc-800/50 px-4 py-2 rounded-2xl border border-zinc-100 dark:border-zinc-800">
-            <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold text-sm">
-              {user.username[0].toUpperCase()}
-            </div>
-            <div className="hidden sm:block">
-              <p className="text-xs font-bold text-zinc-400 dark:text-zinc-500 leading-none mb-0.5 uppercase tracking-tighter">Profile</p>
-              <p className="text-sm font-black text-zinc-900 dark:text-zinc-50 leading-none">{user.username}</p>
-            </div>
-          </div>
+          <div className="h-6 w-px bg-zinc-200 dark:bg-zinc-800 mx-2" />
 
-          <button
-            onClick={handleLogout}
-            className="p-3 text-zinc-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-2xl transition-all active:scale-95 border border-transparent hover:border-red-100 dark:hover:border-red-900/30"
-          >
-            <LogOut className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-3">
+            <div className="flex flex-col items-end">
+              <span className="text-[10px] font-black text-zinc-900 dark:text-zinc-50 uppercase tracking-widest leading-none">{user.username}</span>
+              <span className="text-[8px] font-bold text-emerald-500 uppercase tracking-tighter mt-0.5">Active now</span>
+            </div>
+            <button onClick={handleLogout} className="p-2.5 hover:bg-red-50 dark:hover:bg-red-950/20 text-zinc-400 hover:text-red-500 rounded-xl transition-all border border-zinc-200 dark:border-zinc-800 shadow-sm active:scale-95">
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-8 py-12">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
-          <div className="max-w-2xl">
-            <h2 className="text-5xl font-black text-zinc-900 dark:text-zinc-50 mb-4 tracking-tight">Explore Rooms</h2>
-            <p className="text-xl text-zinc-500 dark:text-zinc-400 font-medium">Join an existing room or create your own protected space to chat with friends.</p>
+      <main className="max-w-7xl mx-auto px-8 py-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div>
+            <div className="flex items-center gap-2 text-blue-600 font-black text-[10px] uppercase tracking-[0.2em] mb-2">
+              <span className="w-8 h-0.5 bg-blue-600 rounded-full" />
+              Discover
+            </div>
+            <h2 className="text-4xl font-black text-zinc-900 dark:text-zinc-50 uppercase tracking-tighter leading-none">
+              Chat Rooms
+            </h2>
           </div>
-          <button
-            onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-3 px-8 py-5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-3xl shadow-2xl shadow-blue-500/30 transition-all hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap"
-          >
-            <Plus className="w-6 h-6" />
-            Create New Room
-          </button>
+
+          <div className="flex items-center gap-3">
+            <div className="relative group">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 group-focus-within:text-blue-500 transition-colors" />
+              <input
+                type="text"
+                placeholder="Find a vibe..."
+                className="pl-11 pr-4 py-3.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl w-full md:w-64 focus:ring-4 focus:ring-blue-500/5 outline-none font-bold text-xs transition-all shadow-sm"
+              />
+            </div>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="flex items-center gap-2 px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-2xl shadow-xl shadow-blue-500/30 transition-all hover:scale-[1.02] active:scale-[0.98] uppercase tracking-widest text-[10px]"
+            >
+              <Plus className="w-4 h-4" />
+              Create Room
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <AnimatePresence>
-            {rooms.map((room) => (
+            {rooms.map((room, index) => (
               <motion.div
                 key={room.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                whileHover={{ y: -8 }}
-                className="group relative bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-[2.5rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none hover:shadow-2xl hover:shadow-blue-500/10 transition-all cursor-pointer overflow-hidden border-b-8 border-b-zinc-100 dark:border-b-zinc-800"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
                 onClick={() => router.push(`/room/${room.id}`)}
+                className="group relative bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 hover:shadow-2xl hover:shadow-blue-500/10 transition-all cursor-pointer overflow-hidden border-b-4 hover:border-b-blue-600 active:scale-[0.99]"
               >
                 <div className="flex justify-between items-start mb-6">
-                  <div className={`p-4 rounded-3xl ${room.passwordHash ? 'bg-amber-100 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400' : 'bg-blue-100 text-blue-600 dark:bg-zinc-800 dark:text-zinc-400'}`}>
-                    {room.passwordHash ? <Lock className="w-6 h-6" /> : <DoorOpen className="w-6 h-6" />}
+                  <div className="w-12 h-12 bg-zinc-50 dark:bg-zinc-800 rounded-2xl flex items-center justify-center text-zinc-400 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-inner">
+                    <Hash className="w-6 h-6" />
                   </div>
-                  <div className="bg-zinc-50 dark:bg-zinc-800 px-4 py-2 rounded-2xl text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase tracking-widest border border-zinc-100 dark:border-zinc-800">
-                    {room._count.messages} MESSAGES
-                  </div>
+                  {room.isProtected && (
+                    <div className="px-3 py-1.5 bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 rounded-xl flex items-center gap-1.5 shadow-sm border border-amber-100 dark:border-amber-900/40">
+                      <Lock className="w-3 h-3" />
+                      <span className="text-[9px] font-black uppercase tracking-tighter">Private</span>
+                    </div>
+                  )}
                 </div>
 
-                <h3 className="text-2xl font-black text-zinc-900 dark:text-zinc-50 mb-3 group-hover:text-blue-600 transition-colors uppercase tracking-tight">{room.name}</h3>
-                <p className="text-zinc-500 dark:text-zinc-400 text-sm font-medium leading-relaxed line-clamp-2">
-                  {room.description || "No description provided for this room."}
+                <h3 className="text-xl font-black text-zinc-900 dark:text-zinc-50 mb-2 truncate uppercase tracking-tight group-hover:text-blue-600 transition-colors">
+                  {room.name}
+                </h3>
+                <p className="text-zinc-500 dark:text-zinc-400 text-xs font-medium line-clamp-2 min-h-[2.5rem] leading-relaxed">
+                  {room.description || "No description provided."}
                 </p>
 
-                <div className="mt-8 pt-8 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between text-xs font-bold text-zinc-400 uppercase tracking-tighter">
-                  <span>CREATED {new Date(room.createdAt).toLocaleDateString()}</span>
-                  <span className="text-blue-600 dark:text-blue-500 group-hover:translate-x-1 transition-transform">JOIN ROOM →</span>
+                <div className="mt-8 pt-6 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-[10px] font-black text-zinc-400 uppercase tracking-tighter">Join the Vibe</span>
+                  </div>
+                  <div className="w-8 h-8 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -219,70 +236,83 @@ export default function LobbyPage() {
 
       {/* Create Room Modal */}
       <AnimatePresence>
-        {showCreateModal && (
+        {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-zinc-950/60 backdrop-blur-md"
-              onClick={() => setShowCreateModal(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsModalOpen(false)}
+              className="absolute inset-0 bg-zinc-900/60 backdrop-blur-sm"
             />
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-lg bg-white dark:bg-zinc-900 rounded-[3rem] shadow-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800"
+              className="relative w-full max-w-lg bg-white dark:bg-zinc-900 rounded-[2.5rem] shadow-2xl overflow-hidden"
             >
-              <div className="bg-blue-600 px-10 py-10 text-white relative">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-3xl" />
-                <h3 className="text-4xl font-black mb-2 tracking-tight">New Room</h3>
-                <p className="text-blue-100 font-medium">Configure your private space.</p>
+              <div className="p-10">
+                <div className="flex items-center gap-3 text-blue-600 font-black text-[10px] uppercase tracking-[0.2em] mb-4">
+                  <span className="w-8 h-0.5 bg-blue-600 rounded-full" />
+                  New Space
+                </div>
+                <h2 className="text-3xl font-black text-zinc-900 dark:text-zinc-50 uppercase tracking-tighter mb-8 leading-none">
+                  Create a Room
+                </h2>
+
+                <form onSubmit={handleCreateRoom} className="space-y-6">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest ml-1">Room Name</label>
+                    <input
+                      required
+                      value={newName}
+                      onChange={(e) => setNewName(e.target.value)}
+                      className="w-full px-6 py-4 bg-zinc-50 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-bold text-sm text-zinc-900 dark:text-zinc-50 shadow-inner"
+                      placeholder="e.g. Midnight Vibin'"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest ml-1">Description</label>
+                    <textarea
+                      value={newDesc}
+                      onChange={(e) => setNewDesc(e.target.value)}
+                      className="w-full px-6 py-4 bg-zinc-50 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-bold text-sm text-zinc-900 dark:text-zinc-50 min-h-[100px] resize-none shadow-inner"
+                      placeholder="What's this room about?"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest ml-1">Privacy (Optional)</label>
+                    <div className="relative">
+                      <Lock className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+                      <input
+                        type="password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        className="w-full pl-14 pr-6 py-4 bg-zinc-50 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-bold text-sm text-zinc-900 dark:text-zinc-50 shadow-inner"
+                        placeholder="Add a password for protection"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 pt-4">
+                    <button
+                      type="button"
+                      onClick={() => setIsModalOpen(false)}
+                      className="flex-1 py-4 text-zinc-500 font-black rounded-2xl hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all uppercase tracking-widest text-[10px]"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="flex-2 py-4 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-2xl shadow-xl shadow-blue-500/30 transition-all hover:scale-[1.02] active:scale-[0.98] uppercase tracking-widest text-[10px]"
+                    >
+                      Launch Room
+                    </button>
+                  </div>
+                </form>
               </div>
-
-              <form onSubmit={handleCreateRoom} className="p-10 space-y-6">
-                <div>
-                  <label className="block text-xs font-black text-zinc-400 uppercase tracking-widest mb-3">Room Name</label>
-                  <input
-                    type="text" required value={newRoomName} onChange={(e) => setNewRoomName(e.target.value)}
-                    className="w-full px-6 py-4 bg-zinc-50 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-bold text-zinc-900 dark:text-zinc-50"
-                    placeholder="E.g. Squad Secret Spot"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-black text-zinc-400 uppercase tracking-widest mb-3">Description</label>
-                  <textarea
-                    value={newRoomDesc} onChange={(e) => setNewRoomDesc(e.target.value)}
-                    className="w-full px-6 py-4 bg-zinc-50 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-medium text-zinc-900 dark:text-zinc-50 h-24 resize-none"
-                    placeholder="What's this room about?"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-black text-zinc-400 uppercase tracking-widest mb-3">Optional Room Password</label>
-                  <input
-                    type="password" value={newRoomPass} onChange={(e) => setNewRoomPass(e.target.value)}
-                    className="w-full px-6 py-4 bg-zinc-50 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-bold text-zinc-900 dark:text-zinc-50"
-                    placeholder="Leave empty for public"
-                  />
-                </div>
-
-                {error && <p className="text-red-500 text-sm font-bold bg-red-50 dark:bg-red-950/30 p-4 rounded-2xl border border-red-100 dark:border-red-900/50">{error}</p>}
-
-                <div className="flex gap-4 pt-4">
-                  <button
-                    type="button" onClick={() => setShowCreateModal(false)}
-                    className="flex-1 py-5 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 font-black rounded-3xl hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all active:scale-[0.98] uppercase tracking-tighter"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="flex-2 py-5 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-3xl shadow-xl shadow-blue-500/30 transition-all hover:scale-[1.02] active:scale-[0.98] uppercase tracking-tighter"
-                  >
-                    Launch Room
-                  </button>
-                </div>
-              </form>
             </motion.div>
           </div>
         )}
