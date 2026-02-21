@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET ?? "7UwLrk5voU7dDV+e9uhbjtfej1iePWo4u1DVmEgeX6w=";
+const JWT_SECRET = process.env.JWT_SECRET!;
 const SALT_ROUNDS = 12;
 
 export type JwtPayload = {

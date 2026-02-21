@@ -1,25 +1,24 @@
 import crypto from "crypto";
 
-// Key must be exactly 32 bytes for aes-256-gcm
-const ENCRYPTION_KEY = process.env.MESSAGE_ENCRYPTION_KEY;
-
-if (!ENCRYPTION_KEY) {
-    console.warn("WARNING: MESSAGE_ENCRYPTION_KEY is not set. Messages will not be encrypted.");
-}
+const getEncryptionKey = () => {
+    const key = process.env.MESSAGE_ENCRYPTION_KEY;
+    if (!key) {
+        console.warn("WARNING: MESSAGE_ENCRYPTION_KEY is not set. Messages will not be encrypted.");
+    }
+    return key;
+};
 
 /**
  * Encrypts content using AES-256-GCM.
  * Structure: IV (12 bytes) : Auth Tag (16 bytes) : Encrypted Content
  */
 export function encrypt(text: string): string {
-    if (!ENCRYPTION_KEY) return text;
+    const keyStr = getEncryptionKey();
+    if (!keyStr) return text;
 
     try {
         const iv = crypto.randomBytes(12);
-        // Use the key directly from env (assuming it's a 32-byte base64 or hex string, or just a string)
-        // For stability, we'll pad or truncate a raw string to 32 bytes if it's not the right length,
-        // but ideally, it's a 32-byte key.
-        const key = crypto.scryptSync(ENCRYPTION_KEY, 'salt', 32);
+        const key = crypto.scryptSync(keyStr, 'salt', 32);
 
         const cipher = crypto.createCipheriv("aes-256-gcm", key, iv);
 
@@ -31,7 +30,7 @@ export function encrypt(text: string): string {
         return `${iv.toString("hex")}:${authTag}:${encrypted}`;
     } catch (error) {
         console.error("Encryption error:", error);
-        return text; // Fallback to raw text if encryption fails
+        return text;
     }
 }
 
@@ -39,7 +38,8 @@ export function encrypt(text: string): string {
  * Decrypts content encrypted with AES-256-GCM.
  */
 export function decrypt(encryptedText: string): string {
-    if (!ENCRYPTION_KEY || !encryptedText.includes(":")) return encryptedText;
+    const keyStr = getEncryptionKey();
+    if (!keyStr || !encryptedText.includes(":")) return encryptedText;
 
     try {
         const [ivHex, authTagHex, contentHex] = encryptedText.split(":");
@@ -47,7 +47,7 @@ export function decrypt(encryptedText: string): string {
 
         const iv = Buffer.from(ivHex, "hex");
         const authTag = Buffer.from(authTagHex, "hex");
-        const key = crypto.scryptSync(ENCRYPTION_KEY, 'salt', 32);
+        const key = crypto.scryptSync(keyStr, 'salt', 32);
 
         const decipher = crypto.createDecipheriv("aes-256-gcm", key, iv);
         decipher.setAuthTag(authTag);
@@ -57,8 +57,6 @@ export function decrypt(encryptedText: string): string {
 
         return decrypted;
     } catch (error) {
-        // If decryption fails, it might be an unencrypted message or a key mismatch.
-        // We log and return the original text as a fallback.
         console.error("Decryption failed (returning raw text):", error);
         return encryptedText;
     }

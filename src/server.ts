@@ -74,6 +74,7 @@ app.prepare().then(() => {
 
                 // Encrypt for database storage
                 const encryptedText = encrypt(text);
+                console.log("Encrypted text:", encryptedText);
 
                 const savedMessage = await prisma.message.create({
                     data: { text: encryptedText, userId: user.userId, roomId },
