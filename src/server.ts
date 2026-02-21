@@ -1,13 +1,7 @@
 import { createServer } from "node:http";
 import next from "next";
 import { Server } from "socket.io";
-import { PrismaClient } from "@prisma/client";
-import { PrismaLibSql } from "@prisma/adapter-libsql";
-
-const adapter = new PrismaLibSql({
-    url: process.env.DATABASE_URL || "file:./dev.db",
-});
-const prisma = new PrismaClient({ adapter });
+import { prisma } from "./lib/prisma";
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
