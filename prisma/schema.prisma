@@ -3,12 +3,36 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
+}
+
+model User {
+  id           String    @id @default(cuid())
+  username     String    @unique
+  email        String    @unique
+  passwordHash String
+  createdAt    DateTime  @default(now())
+  messages     Message[]
+  rooms        Room[]    @relation("RoomCreator")
+}
+
+model Room {
+  id           String    @id @default(cuid())
+  name         String    @unique
+  description  String?
+  passwordHash String?
+  createdBy    String
+  creator      User      @relation("RoomCreator", fields: [createdBy], references: [id])
+  createdAt    DateTime  @default(now())
+  messages     Message[]
 }
 
 model Message {
   id        String   @id @default(cuid())
   text      String
-  username  String
+  userId    String
+  roomId    String
+  user      User     @relation(fields: [userId], references: [id])
+  room      Room     @relation(fields: [roomId], references: [id])
   createdAt DateTime @default(now())
 }
