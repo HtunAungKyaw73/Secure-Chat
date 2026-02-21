@@ -163,14 +163,14 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
     };
 
     if (loading) return (
-        <div className="h-screen bg-[var(--background)] flex items-center justify-center">
+        <div className="h-screen bg-background flex items-center justify-center">
             <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
         </div>
     );
 
     if (!isAuthenticated && roomInfo?.isProtected) {
         return (
-            <div className="min-h-screen bg-[var(--background)] flex items-center justify-center p-4">
+            <div className="min-h-screen bg-background flex items-center justify-center p-4">
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -213,7 +213,7 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
     }
 
     return (
-        <div className="flex flex-col h-screen bg-[var(--background)] transition-colors duration-0">
+        <div className="flex flex-col h-screen bg-background transition-colors duration-0">
             <header className="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 px-6 py-4 flex items-center justify-between shadow-sm z-10 transition-colors duration-0">
                 <div className="flex items-center gap-4">
                     <button onClick={() => router.push("/")} className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-all text-zinc-600 dark:text-zinc-400 active:scale-90">

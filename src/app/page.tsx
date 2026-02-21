@@ -116,7 +116,7 @@ export default function LobbyPage() {
   if (loading || !user) return null;
 
   return (
-    <div className="min-h-screen bg-[var(--background)] transition-colors duration-0">
+    <div className="min-h-screen bg-background transition-colors duration-0">
       {/* Header */}
       <header className="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 px-8 py-5 flex items-center justify-between shadow-sm sticky top-0 z-20 transition-colors duration-0">
         <div className="flex items-center gap-3">
@@ -277,7 +277,7 @@ export default function LobbyPage() {
                   </button>
                   <button
                     type="submit"
-                    className="flex-[2] py-5 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-3xl shadow-xl shadow-blue-500/30 transition-all hover:scale-[1.02] active:scale-[0.98] uppercase tracking-tighter"
+                    className="flex-2 py-5 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-3xl shadow-xl shadow-blue-500/30 transition-all hover:scale-[1.02] active:scale-[0.98] uppercase tracking-tighter"
                   >
                     Launch Room
                   </button>
