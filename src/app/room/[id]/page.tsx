@@ -109,7 +109,7 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
         };
 
         init();
-    }, [roomId, router, user]);
+    }, [roomId, router]);
 
     // Handle socket connection only after authentication
     useEffect(() => {
