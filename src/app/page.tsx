@@ -21,6 +21,28 @@ export default function ChatApp() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Check local storage for existing session
+    const storedUsername = localStorage.getItem("vibe_chat_username");
+    if (storedUsername) {
+      setUsername(storedUsername);
+
+      // Fetch history immediately for auto-joined session
+      fetch("/api/messages")
+        .then((res) => {
+          if (res.ok) return res.json();
+          throw new Error("Failed to load history");
+        })
+        .then((history) => {
+          setMessages(history);
+        })
+        .catch(console.error)
+        .finally(() => {
+          setIsJoined(true);
+        });
+    }
+  }, []);
+
+  useEffect(() => {
     // Scroll to bottom whenever messages change
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -68,6 +90,7 @@ export default function ChatApp() {
     } catch (err) {
       console.error("Failed to load history", err);
     } finally {
+      localStorage.setItem("vibe_chat_username", username.trim());
       setLoading(false);
       setIsJoined(true);
     }
@@ -87,6 +110,7 @@ export default function ChatApp() {
   };
 
   const handleLeave = () => {
+    localStorage.removeItem("vibe_chat_username");
     setIsJoined(false);
     setUsername("");
     setMessages([]);
@@ -216,8 +240,8 @@ export default function ChatApp() {
                   </span>
                   <div
                     className={`px-4 py-2.5 rounded-2xl ${isMe
-                        ? "bg-gradient-to-br from-violet-600 to-indigo-600 text-white rounded-tr-sm shadow-violet-500/20"
-                        : "bg-zinc-800/80 text-zinc-100 border border-zinc-700/50 rounded-tl-sm shadow-black/20"
+                      ? "bg-gradient-to-br from-violet-600 to-indigo-600 text-white rounded-tr-sm shadow-violet-500/20"
+                      : "bg-zinc-800/80 text-zinc-100 border border-zinc-700/50 rounded-tl-sm shadow-black/20"
                       } shadow-lg`}
                   >
                     <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
