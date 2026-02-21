@@ -4,16 +4,24 @@
 /* Tell Tailwind v4 that dark: variant is class-based, not media-query-based */
 @variant dark (&:where(.dark, .dark *));
 
-/* Light theme (default) */
+/* Light theme (default) - UPDATED to Crystal */
 :root {
-  --background: #f4f4f5;
-  --foreground: #18181b;
+  --background: #fafafa;
+  /* Brighter snow background */
+  --foreground: #09090b;
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(9, 9, 11, 0.08);
+  --accent-glow: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.06), transparent 80%);
 }
 
-/* Dark theme */
+/* Dark theme - Deep Space */
 :root.dark {
   --background: #09090b;
+  /* Pure charcoal base */
   --foreground: #fafafa;
+  --glass-bg: rgba(24, 24, 27, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --accent-glow: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.15), transparent 70%);
 }
 
 @theme inline {
@@ -66,6 +74,61 @@
 .dark::view-transition-new(root),
 :root:not(.dark)::view-transition-new(root) {
   animation: circle-in 0.6s ease-in-out;
+}
+
+/* ─── Glassmorphism Components ─── */
+@layer components {
+  .glass {
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+    background: var(--glass-bg);
+  }
+
+  .dark .glass {
+    background: rgba(24, 24, 27, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  .glass-amethyst {
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow: 0 10px 30px -10px rgba(139, 92, 246, 0.1);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(217, 70, 239, 0.04));
+    border: 1px solid rgba(139, 92, 246, 0.15);
+  }
+
+  .dark .glass-amethyst {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(217, 70, 239, 0.05));
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    box-shadow: 0 25px 50px -12px rgba(139, 92, 246, 0.1);
+  }
+}
+
+@layer utilities {
+  .glass-border-b {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .bg-glow-mesh {
+    background-image: var(--accent-glow);
+    background-size: 200% 200%;
+    animation: glow-pulse 10s ease-in-out infinite;
+  }
+}
+
+@keyframes glow-pulse {
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 @keyframes circle-in {

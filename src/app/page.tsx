@@ -127,16 +127,16 @@ export default function LobbyPage() {
   return (
     <div className="min-h-screen bg-background transition-colors duration-0">
       {/* Header */}
-      <header className="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 px-8 py-4 flex items-center justify-between shadow-sm sticky top-0 z-20 transition-colors duration-0">
+      <header className="glass glass-border-b px-8 py-4 flex items-center justify-between sticky top-0 z-20">
         <div className="flex items-center gap-3">
-          <div className="bg-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-500/20">
+          <div className="bg-violet-600 p-2 rounded-xl text-white shadow-lg shadow-violet-500/20">
             <MessageSquare className="w-5 h-5" />
           </div>
-          <h1 className="text-xs font-black text-zinc-900 dark:text-zinc-50 uppercase tracking-widest">VibeChat Lobby</h1>
+          <h1 className="text-[10px] font-black text-zinc-900 dark:text-zinc-50 uppercase tracking-[0.3em]">VibeChat</h1>
         </div>
 
         <div className="flex items-center gap-4">
-          <button onClick={handleThemeToggle} className="p-2.5 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-all text-zinc-500 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800 shadow-sm">
+          <button onClick={handleThemeToggle} className="p-2.5 hover:bg-black/5 dark:hover:bg-zinc-800/50 rounded-xl transition-all text-zinc-500 dark:text-zinc-400 border border-black/5 dark:border-white/10 shadow-sm">
             <AnimatePresence mode="wait" initial={false}>
               {theme === "dark" ? (
                 <motion.div key="sun" initial={{ scale: 0.5, rotate: -45 }} animate={{ scale: 1, rotate: 0 }} exit={{ scale: 0.5, rotate: 45 }}>
@@ -149,15 +149,12 @@ export default function LobbyPage() {
               )}
             </AnimatePresence>
           </button>
-
-          <div className="h-6 w-px bg-zinc-200 dark:bg-zinc-800 mx-2" />
-
-          <div className="flex items-center gap-3">
-            <div className="flex flex-col items-end">
-              <span className="text-[10px] font-black text-zinc-900 dark:text-zinc-50 uppercase tracking-widest leading-none">{user.username}</span>
-              <span className="text-[8px] font-bold text-emerald-500 uppercase tracking-tighter mt-0.5">Active now</span>
+          <div className="flex items-center gap-4 border-l border-black/5 dark:border-white/5 pl-4">
+            <div className="hidden lg:flex flex-col items-end">
+              <span className="text-[9px] font-black text-zinc-900 dark:text-zinc-100 uppercase tracking-widest">{user?.username}</span>
+              <span className="text-[8px] font-black text-emerald-500 uppercase tracking-tighter">Online</span>
             </div>
-            <button onClick={handleLogout} className="p-2.5 hover:bg-red-50 dark:hover:bg-red-950/20 text-zinc-400 hover:text-red-500 rounded-xl transition-all border border-zinc-200 dark:border-zinc-800 shadow-sm active:scale-95">
+            <button onClick={handleLogout} className="p-2.5 hover:bg-red-500/10 hover:text-red-500 rounded-xl transition-all text-zinc-500 dark:text-zinc-400 border border-black/5 dark:border-white/10 shadow-sm">
               <LogOut className="w-4 h-4" />
             </button>
           </div>
@@ -165,39 +162,39 @@ export default function LobbyPage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-8 py-10">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-          <div>
-            <div className="flex items-center gap-2 text-indigo-600 font-black text-[10px] uppercase tracking-[0.2em] mb-2">
-              <span className="w-8 h-0.5 bg-indigo-600 rounded-full" />
-              Discover
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-violet-500 font-black text-[10px] uppercase tracking-[0.4em]">
+              <span className="w-12 h-0.5 bg-violet-600 rounded-full" />
+              Pulse
             </div>
-            <h2 className="text-4xl font-black text-zinc-900 dark:text-zinc-50 uppercase tracking-tighter leading-none">
-              Chat Rooms
+            <h2 className="text-6xl font-black text-zinc-900 dark:text-zinc-50 uppercase tracking-tighter leading-[0.85]">
+              Virtual<br /><span className="text-transparent bg-clip-text bg-linear-to-r from-violet-500 to-fuchsia-500">Lounges</span>
             </h2>
           </div>
 
           <div className="flex items-center gap-3">
             <div className="relative group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 group-focus-within:text-indigo-500 transition-colors" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-violet-400 transition-colors" />
               <input
                 type="text"
-                placeholder="Find a vibe..."
+                placeholder="Search spaces..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-11 pr-4 py-3.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl w-full md:w-64 focus:ring-4 focus:ring-indigo-500/5 outline-none font-bold text-xs transition-all shadow-sm"
+                className="pl-11 pr-4 py-4 bg-violet-500/3 dark:bg-zinc-900/40 border border-violet-500/10 dark:border-white/10 rounded-2xl w-full md:w-72 backdrop-blur-md focus:ring-4 focus:ring-violet-500/10 outline-none font-bold text-[11px] transition-all shadow-xl text-zinc-900 dark:text-zinc-50"
               />
             </div>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="flex items-center gap-2 px-6 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-2xl shadow-xl shadow-indigo-500/30 transition-all hover:scale-[1.02] active:scale-[0.98] uppercase tracking-widest text-[10px]"
+              className="flex items-center gap-2 px-8 py-4 bg-violet-600 hover:bg-violet-700 text-white font-black rounded-2xl shadow-2xl shadow-violet-500/30 transition-all hover:scale-[1.05] active:scale-[0.95] uppercase tracking-[0.2em] text-[10px]"
             >
               <Plus className="w-4 h-4" />
-              Create Room
+              Create
             </button>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <AnimatePresence>
             {rooms
               .filter(room =>
@@ -207,40 +204,44 @@ export default function LobbyPage() {
               .map((room, index) => (
                 <motion.div
                   key={room.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: index * 0.05, duration: 0.4, ease: "easeOut" }}
                   onClick={() => router.push(`/room/${room.id}`)}
-                  className="group relative bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all cursor-pointer overflow-hidden border-b-4 hover:border-b-indigo-600 active:scale-[0.99]"
+                  className="group relative glass glass-amethyst rounded-[2.5rem] p-8 hover:shadow-[0_20px_50px_rgba(139,92,246,0.15)] transition-all cursor-pointer overflow-hidden"
                 >
-                  <div className="flex justify-between items-start mb-6">
-                    <div className="w-12 h-12 bg-zinc-50 dark:bg-zinc-800 rounded-2xl flex items-center justify-center text-zinc-400 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-inner">
-                      <Hash className="w-6 h-6" />
+                  <div className="flex justify-between items-start mb-8">
+                    <div className="flex items-center gap-3">
+                      <div className="p-3.5 bg-zinc-100 dark:bg-zinc-800/80 rounded-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm border border-black/5 dark:border-white/5">
+                        <Hash className="w-5 h-5 text-violet-600 dark:text-violet-400" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-black text-zinc-900 dark:text-zinc-50 tracking-tighter uppercase group-hover:translate-x-1 transition-transform duration-300">
+                          {room.name}
+                        </h3>
+                        <p className="text-zinc-500 dark:text-zinc-400 text-[12px] font-bold line-clamp-1 opacity-80">
+                          {room.description || "No description provided."}
+                        </p>
+                      </div>
                     </div>
                     {room.isProtected && (
-                      <div className="px-3 py-1.5 bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 rounded-xl flex items-center gap-1.5 shadow-sm border border-amber-100 dark:border-amber-900/40">
-                        <Lock className="w-3 h-3" />
-                        <span className="text-[9px] font-black uppercase tracking-tighter">Private</span>
+                      <div className="px-4 py-2 bg-amber-500/10 text-amber-500 rounded-xl flex items-center gap-2 border border-amber-500/20">
+                        <Lock className="w-3.5 h-3.5" />
+                        <span className="text-[10px] font-black uppercase tracking-tighter">Private</span>
                       </div>
                     )}
                   </div>
 
-                  <h3 className="text-xl font-black text-zinc-900 dark:text-zinc-50 mb-2 truncate uppercase tracking-tight group-hover:text-indigo-600 transition-colors">
-                    {room.name}
-                  </h3>
-                  <p className="text-zinc-500 dark:text-zinc-400 text-xs font-medium line-clamp-2 min-h-10 leading-relaxed">
-                    {room.description || "No description provided."}
-                  </p>
-
-                  <div className="mt-8 pt-6 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
+                  <div className="pt-8 flex items-center justify-between border-t border-black/5 dark:border-white/5">
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                      <span className="text-[10px] font-black text-zinc-400 uppercase tracking-tighter">Join the Vibe</span>
+                      <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                      <span className="text-[10px] font-black text-zinc-900 dark:text-zinc-50 uppercase tracking-[0.2em]">Open Vibe</span>
                     </div>
-                    <div className="w-8 h-8 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 group-hover:bg-indigo-600 group-hover:text-white transition-all">
-                      <ArrowRight className="w-4 h-4" />
+                    <div className="p-3 bg-zinc-900 dark:bg-violet-600 rounded-xl group-hover:px-6 group-hover:bg-violet-600 transition-all duration-500 shadow-lg">
+                      <ArrowRight className="w-4 h-4 text-white" />
                     </div>
                   </div>
+                  <div className="absolute inset-0 bg-linear-to-r from-violet-600/20 to-fuchsia-600/20 blur-2xl group-hover:opacity-40 transition-opacity opacity-20" />
                 </motion.div>
               ))}
           </AnimatePresence>
@@ -256,72 +257,72 @@ export default function LobbyPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsModalOpen(false)}
-              className="absolute inset-0 bg-zinc-900/60 backdrop-blur-sm"
+              className="absolute inset-0 bg-zinc-950/40 dark:bg-zinc-950/60 backdrop-blur-md"
             />
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              initial={{ opacity: 0, scale: 0.95, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-lg bg-white dark:bg-zinc-900 rounded-[2.5rem] shadow-2xl overflow-hidden"
+              exit={{ opacity: 0, scale: 0.95, y: 30 }}
+              className="relative w-full max-w-lg bg-white/95 dark:bg-transparent glass dark:glass-amethyst rounded-[3rem] shadow-2xl overflow-hidden border border-black/5 dark:border-white/10 backdrop-blur-xl"
             >
-              <div className="p-10">
-                <div className="flex items-center gap-3 text-indigo-600 font-black text-[10px] uppercase tracking-[0.2em] mb-4">
-                  <span className="w-8 h-0.5 bg-indigo-600 rounded-full" />
-                  New Space
+              <div className="p-12">
+                <div className="flex items-center gap-3 text-violet-500 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
+                  <span className="w-12 h-0.5 bg-violet-600 rounded-full" />
+                  Manifest
                 </div>
-                <h2 className="text-3xl font-black text-zinc-900 dark:text-zinc-50 uppercase tracking-tighter mb-8 leading-none">
-                  Create a Room
+                <h2 className="text-4xl font-black text-zinc-900 dark:text-zinc-50 uppercase tracking-tighter mb-10 leading-none">
+                  New Universe
                 </h2>
 
-                <form onSubmit={handleCreateRoom} className="space-y-6">
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest ml-1">Room Name</label>
+                <form onSubmit={handleCreateRoom} className="space-y-8">
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black text-zinc-800 dark:text-zinc-500 uppercase tracking-widest ml-1">Room Name</label>
                     <input
                       required
                       value={newName}
                       onChange={(e) => setNewName(e.target.value)}
-                      className="w-full px-6 py-4 bg-zinc-50 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-bold text-sm text-zinc-900 dark:text-zinc-50 shadow-inner"
-                      placeholder="e.g. Midnight Vibin'"
+                      className="w-full px-6 py-5 bg-violet-500/3 dark:bg-zinc-800/40 border border-violet-500/10 dark:border-white/10 rounded-2xl focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500/50 outline-none transition-all font-bold text-[12px] text-zinc-900 dark:text-zinc-50 shadow-inner backdrop-blur-md"
+                      placeholder="e.g. Neon Horizon"
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest ml-1">Description</label>
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black text-zinc-800 dark:text-zinc-500 uppercase tracking-widest ml-1">Aura (Description)</label>
                     <textarea
                       value={newDesc}
                       onChange={(e) => setNewDesc(e.target.value)}
-                      className="w-full px-6 py-4 bg-zinc-50 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-bold text-sm text-zinc-900 dark:text-zinc-50 min-h-[100px] resize-none shadow-inner"
-                      placeholder="What's this room about?"
+                      className="w-full px-6 py-5 bg-violet-500/3 dark:bg-zinc-800/40 border border-violet-500/10 dark:border-white/10 rounded-2xl focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500/50 outline-none transition-all font-bold text-[12px] text-zinc-900 dark:text-zinc-50 min-h-[120px] resize-none shadow-inner backdrop-blur-md"
+                      placeholder="Define the vibration..."
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest ml-1">Privacy (Optional)</label>
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black text-zinc-800 dark:text-zinc-500 uppercase tracking-widest ml-1">Lock (Optional)</label>
                     <div className="relative">
-                      <Lock className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+                      <Lock className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500" />
                       <input
                         type="password"
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
-                        className="w-full pl-14 pr-6 py-4 bg-zinc-50 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-bold text-sm text-zinc-900 dark:text-zinc-50 shadow-inner"
-                        placeholder="Add a password for protection"
+                        className="w-full pl-14 pr-6 py-5 bg-violet-500/3 dark:bg-zinc-800/40 border border-violet-500/10 dark:border-white/10 rounded-2xl focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500/50 outline-none transition-all font-bold text-[12px] text-zinc-900 dark:text-zinc-50 shadow-inner backdrop-blur-md"
+                        placeholder="Add protection..."
                       />
                     </div>
                   </div>
 
-                  <div className="flex gap-3 pt-4">
+                  <div className="flex gap-4 pt-6">
                     <button
                       type="button"
                       onClick={() => setIsModalOpen(false)}
-                      className="flex-1 py-4 text-zinc-500 font-black rounded-2xl hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all uppercase tracking-widest text-[10px]"
+                      className="flex-1 py-5 text-zinc-800 dark:text-zinc-500 font-black rounded-2xl hover:bg-black/5 dark:hover:bg-white/5 border border-black/5 dark:border-white/5 transition-all uppercase tracking-widest text-[10px]"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      className="flex-2 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-2xl shadow-xl shadow-indigo-500/30 transition-all hover:scale-[1.02] active:scale-[0.98] uppercase tracking-widest text-[10px]"
+                      className="flex-2 py-5 bg-violet-600 hover:bg-violet-700 text-white font-black rounded-2xl shadow-2xl shadow-violet-500/30 border border-white/10 transition-all hover:scale-[1.05] active:scale-[0.95] uppercase tracking-widest text-[10px]"
                     >
-                      Launch Room
+                      Construct
                     </button>
                   </div>
                 </form>

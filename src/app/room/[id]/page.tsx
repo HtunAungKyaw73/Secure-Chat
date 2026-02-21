@@ -232,33 +232,33 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
     }
 
     return (
-        <div className="flex flex-col h-screen bg-background transition-colors duration-0">
-            <header className="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 px-6 py-3 flex items-center justify-between shadow-sm z-10 transition-colors duration-0">
+        <div className="flex flex-col h-screen bg-transparent transition-colors duration-0">
+            <header className="glass glass-border-b px-6 py-3 flex items-center justify-between z-20">
                 <div className="flex items-center gap-4">
-                    <button onClick={() => router.push("/")} className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-all text-zinc-500 dark:text-zinc-400 active:scale-90 border border-transparent hover:border-zinc-200 dark:hover:border-zinc-700">
+                    <button onClick={() => router.push("/")} className="p-2 hover:bg-white/5 rounded-xl transition-all text-zinc-500 dark:text-zinc-400 active:scale-90 border border-transparent hover:border-white/10">
                         <ArrowLeft className="w-4 h-4" />
                     </button>
-                    <div className="bg-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-500/20">
+                    <div className="bg-violet-600 p-2 rounded-xl text-white shadow-lg shadow-violet-500/20">
                         <MessageSquare className="w-5 h-5" />
                     </div>
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                            <h1 className="text-sm font-black text-zinc-900 dark:text-zinc-50 leading-tight uppercase tracking-wide truncate">{roomInfo?.name}</h1>
-                            <div className="flex items-center gap-1 px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/30 rounded-full border border-emerald-100 dark:border-emerald-900/40 shrink-0">
-                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-tighter">
+                            <h1 className="text-[10px] font-black text-zinc-900 dark:text-zinc-50 uppercase tracking-[0.2em] truncate">{roomInfo?.name}</h1>
+                            <div className="flex items-center gap-1.5 px-2 py-0.5 bg-emerald-500/10 rounded-full border border-emerald-500/20 shrink-0">
+                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                                <span className="text-[9px] font-black text-emerald-500 uppercase tracking-tighter">
                                     {members.length > 0 ? members.length : 1} Live
                                 </span>
                             </div>
                         </div>
-                        <div className="flex items-center gap-1 text-zinc-500 dark:text-zinc-400 font-bold text-[10px] uppercase tracking-widest mt-1">
+                        <div className="flex items-center gap-1 text-zinc-500 dark:text-zinc-400 font-bold text-[9px] uppercase tracking-[0.2em] mt-1">
                             {members.filter(m => {
                                 const mId = m.userId || (m as any).id;
                                 const myId = user?.userId || (user as any)?.id;
                                 return mId && myId && String(mId) !== String(myId);
                             }).length > 0 ? (
-                                <span className="text-indigo-600 dark:text-indigo-400 bg-indigo-50/50 dark:bg-indigo-950/30 px-2 py-0.5 rounded-md border border-indigo-100/50 dark:border-indigo-900/40 truncate flex items-center gap-1">
-                                    Talking with: <span className="font-black text-indigo-700 dark:text-indigo-300">
+                                <span className="text-violet-400 bg-violet-500/10 px-2 py-0.5 rounded-md border border-violet-500/20 truncate flex items-center gap-1">
+                                    Talking with: <span className="font-black text-violet-300">
                                         {members
                                             .filter(m => {
                                                 const mId = m.userId || (m as any).id;
@@ -271,8 +271,8 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
                                 </span>
                             ) : (
                                 <div className="flex items-center gap-1.5 opacity-60 ml-1">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
-                                    <span className="italic lowercase tracking-normal font-medium">Vibing solo... waiting for others</span>
+                                    <div className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
+                                    <span className="italic lowercase tracking-normal font-medium">Vibing solo...</span>
                                 </div>
                             )}
                         </div>
@@ -280,20 +280,20 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <div className="hidden md:flex items-center -space-x-2 mr-2">
+                    <div className="hidden md:flex items-center -space-x-2 mr-4">
                         {members.slice(0, 3).map((m, i) => (
-                            <div key={i} title={m.username} className="w-7 h-7 rounded-lg border-2 border-white dark:border-zinc-900 bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-[10px] font-black uppercase text-zinc-600 dark:text-zinc-400">
+                            <div key={i} title={m.username} className="w-8 h-8 rounded-xl border border-black/5 dark:border-white/10 bg-zinc-100 dark:bg-white/5 flex items-center justify-center text-[10px] font-black uppercase text-zinc-600 dark:text-zinc-400 backdrop-blur-md">
                                 {m.username.charAt(0)}
                             </div>
                         ))}
                         {members.length > 3 && (
-                            <div className="w-7 h-7 rounded-lg border-2 border-white dark:border-zinc-900 bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-[9px] font-black text-zinc-400">
+                            <div className="w-8 h-8 rounded-xl border border-black/5 dark:border-white/10 bg-zinc-100 dark:bg-white/5 flex items-center justify-center text-[9px] font-black text-zinc-700 dark:text-zinc-500 backdrop-blur-md">
                                 +{members.length - 3}
                             </div>
                         )}
                     </div>
 
-                    <button onClick={handleThemeToggle} className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-all text-zinc-500 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800 shadow-sm">
+                    <button onClick={handleThemeToggle} className="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all text-zinc-500 dark:text-zinc-400 border border-black/5 dark:border-white/10 shadow-sm">
                         <AnimatePresence mode="wait" initial={false}>
                             {theme === "dark" ? (
                                 <motion.div key="sun" initial={{ scale: 0.5, rotate: -45 }} animate={{ scale: 1, rotate: 0 }} exit={{ scale: 0.5, rotate: 45 }}>
@@ -306,33 +306,33 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
                             )}
                         </AnimatePresence>
                     </button>
-                    <button onClick={handleLogout} className="flex items-center gap-2 px-4 py-2 text-zinc-600 dark:text-zinc-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-xl transition-all border border-zinc-200 dark:border-zinc-800 font-bold active:scale-95 shadow-sm">
+                    <button onClick={handleLogout} className="flex items-center gap-2 px-4 py-2 text-zinc-500 dark:text-zinc-400 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all border border-black/5 dark:border-white/10 font-bold active:scale-95 shadow-sm">
                         <LogOut className="w-3.5 h-3.5" />
-                        <span className="text-xs">Leave</span>
+                        <span className="text-[10px] uppercase tracking-widest">Leave</span>
                     </button>
                 </div>
             </header>
 
-            <main className="flex-1 overflow-y-auto bg-zinc-50/50 dark:bg-background transition-colors duration-0">
-                <div className="max-w-2xl mx-auto w-full min-h-full p-6 space-y-6 bg-transparent">
+            <main className="flex-1 overflow-y-auto bg-transparent">
+                <div className="max-w-2xl mx-auto w-full min-h-full p-8 space-y-8 bg-transparent">
                     <AnimatePresence initial={false}>
                         {messages.map((msg) => {
                             const isMe = msg.userId === user?.userId;
                             return (
-                                <motion.div key={msg.id} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} layout className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
+                                <motion.div key={msg.id} initial={{ opacity: 0, y: 10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} layout className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
                                     <div className={`flex flex-col max-w-[85%] ${isMe ? "items-end" : "items-start"}`}>
                                         {!isMe && (
-                                            <div className="flex items-center gap-1.5 mb-1.5 ml-1">
-                                                <div className="w-4 h-4 rounded-md bg-indigo-600 flex items-center justify-center text-[8px] font-black text-white uppercase">
+                                            <div className="flex items-center gap-2 mb-2 ml-1">
+                                                <div className="w-5 h-5 rounded-lg bg-violet-600 flex items-center justify-center text-[9px] font-black text-white uppercase shadow-lg shadow-violet-500/20">
                                                     {msg.user.username.charAt(0)}
                                                 </div>
                                                 <span className="text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase tracking-widest leading-none">{msg.user.username}</span>
                                             </div>
                                         )}
-                                        <div className={`px-4 py-2.5 rounded-2xl text-[13px] leading-relaxed shadow-sm ${isMe ? "bg-indigo-600 text-white rounded-tr-none font-medium" : "bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-tl-none text-zinc-800 dark:text-zinc-200"}`}>
+                                        <div className={`px-5 py-3 rounded-2xl text-[12.5px] leading-relaxed shadow-xl backdrop-blur-md border ${isMe ? "glass-amethyst text-zinc-900 dark:text-white rounded-tr-none border-violet-500/30" : "glass text-zinc-800 dark:text-zinc-100 border-white/10 rounded-tl-none font-medium"}`}>
                                             {msg.text}
                                         </div>
-                                        <span className="text-[9px] text-zinc-400 dark:text-zinc-500 mt-1.5 px-2 font-bold opacity-60">
+                                        <span className="text-[9px] text-zinc-500 dark:text-zinc-500 mt-2 px-2 font-black uppercase tracking-tighter opacity-40">
                                             {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                         </span>
                                     </div>
@@ -344,14 +344,15 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
                 </div>
             </main>
 
-            <footer className="p-4 bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 transition-colors duration-0">
+            <footer className="p-6 bg-transparent">
                 <form onSubmit={sendMessage} className="max-w-2xl mx-auto relative group">
+                    <div className="absolute -inset-1 bg-linear-to-r from-violet-600 to-fuchsia-600 rounded-4xl opacity-20 blur-xl group-focus-within:opacity-40 transition-opacity" />
                     <input
                         type="text" value={inputText} onChange={(e) => setInputText(e.target.value)}
-                        className="w-full pl-6 pr-14 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-zinc-900 dark:text-zinc-50 font-medium text-sm shadow-inner"
-                        placeholder="Type a message..."
+                        className="relative w-full pl-7 pr-16 py-4 glass dark:bg-zinc-900/60 border border-black/5 dark:border-white/20 rounded-3xl focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500/50 outline-none transition-all text-zinc-900 dark:text-zinc-50 font-bold text-[13px] shadow-2xl"
+                        placeholder="Transmit your message..."
                     />
-                    <button type="submit" disabled={!inputText.trim()} className="absolute right-1.5 top-1.5 bottom-1.5 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all shadow-lg shadow-blue-500/20 active:scale-95 disabled:opacity-30 flex items-center justify-center">
+                    <button type="submit" disabled={!inputText.trim()} className="absolute right-2 top-2 bottom-2 px-5 bg-violet-600 hover:bg-violet-700 text-white rounded-2xl transition-all shadow-xl shadow-violet-500/30 active:scale-90 disabled:opacity-30 flex items-center justify-center backdrop-blur-md border border-black/5 dark:border-white/10">
                         <Send className="w-4 h-4" />
                     </button>
                 </form>
