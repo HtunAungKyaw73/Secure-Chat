@@ -35,8 +35,8 @@ SecureChat is a premium, real-time messaging application built with a high-densi
 
 1. Clone the repository:
    ```bash
-   git clone <your-repo-url>
-   cd Vibe-Coding/chat-app
+   git clone https://github.com/HtunAungKyaw73/Secure-Chat.git
+   cd chat-app
    ```
 
 2. Install dependencies:

@@ -2,7 +2,8 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { io, Socket } from "socket.io-client";
+// import { io, Socket } from "socket.io-client";
+import { socket } from "@/lib/socket";
 import {
     Send,
     LogOut,
@@ -49,7 +50,7 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
     const [inputText, setInputText] = useState("");
     const [user, setUser] = useState<User | null>(null);
     const [roomInfo, setRoomInfo] = useState<RoomInfo | null>(null);
-    const [socket, setSocket] = useState<Socket | null>(null);
+    // const [socket, setSocket] = useState<Socket | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [password, setPassword] = useState("");
     const [authError, setAuthError] = useState("");
@@ -112,13 +113,13 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
     // Handle socket connection only after authentication
     useEffect(() => {
         if (isAuthenticated && roomId) {
-            const newSocket = io();
-            setSocket(newSocket);
+            // const newSocket = io();
+            // setSocket(newSocket);
 
-            newSocket.on("connect", () => {
-                const myId = user?.userId;
-                console.log(`[Socket] Connected to room ${roomId} as ${user?.username} (ID: ${myId})`);
-                newSocket.emit("join_room", roomId);
+            socket.connect();
+
+            socket.on("connect", () => {
+                socket.emit("join_room", roomId);
             });
 
             // Fetch message history
@@ -126,20 +127,22 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
                 .then(res => res.json())
                 .then(data => setMessages(data));
 
-            newSocket.on("receive_message", (msg: Message) => {
+            socket.on("receive_message", (msg: Message) => {
                 setMessages((prev) => [...prev, msg]);
             });
 
-            newSocket.on("room_members", (memberList: Member[]) => {
-                console.log("Member list updated:", memberList);
+            socket.on("room_members", (memberList: Member[]) => {
                 setMembers(memberList);
             });
 
             return () => {
-                newSocket.disconnect();
+                socket.off("connect");
+                socket.off("receive_message");
+                socket.off("room_members");
+                socket.disconnect();
             };
         }
-    }, [roomId, isAuthenticated, user?.userId, user?.username]);
+    }, [roomId, isAuthenticated]);
 
     const handleVerifyPassword = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -167,7 +170,7 @@ export default function RoomPage({ params }: { params: Promise<{ id: string }> }
 
     const sendMessage = (e: React.FormEvent) => {
         e.preventDefault();
-        if (inputText.trim() && socket && user) {
+        if (inputText.trim() && socket.connected && user) {
             socket.emit("send_message", { text: inputText, roomId });
             setInputText("");
         }

@@ -12,3 +12,4 @@
 
 ## 4. New Knowledge
 - [Agent Note]: Record any new patterns or library quirks learned here to update the Knowledge Base.
+- Add line-by-line explanation of the code.
